@@ -1,0 +1,25 @@
+generated: '2026-07-31'
+method: derived
+source: openapi/anomalo-public-api-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: AnomaloToken
+  type: apiKey
+  in: header
+  parameter: X-Anomalo-Token
+  description: Anomalo API secret token. The first-party client sends it as `X-Anomalo-Token`
+    by default (`legacy_auth=True`), read from the `ANOMALO_API_SECRET_TOKEN` environment variable.
+  sources:
+  - openapi/anomalo-public-api-openapi.yml
+- name: BearerToken
+  type: http
+  scheme: bearer
+  description: 'Anomalo API secret token sent as `Authorization: Bearer <token>`. Selected in
+    the first-party client with `legacy_auth=False`.'
+  sources:
+  - openapi/anomalo-public-api-openapi.yml

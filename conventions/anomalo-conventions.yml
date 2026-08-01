@@ -1,0 +1,231 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/anomalo-public-api-openapi.yml + the first-party `anomalo` PyPI client 0.46.0
+  (anomalo/client.py) it was derived from
+note: >-
+  Cross-cutting request/response semantics for the Anomalo Public API. Derived from the first-party
+  client's transport layer (`Client._api_call`), which is the only public description of these
+  conventions — Anomalo's API documentation is gated to customers. Absences recorded below are real
+  absences observed in the client source, not gaps in this survey.
+base:
+  url_template: https://{instance}/api/public/v1/{endpoint}
+  deployment: per-tenant
+  instance_env_var: ANOMALO_INSTANCE_HOST
+  note: >-
+    Anomalo is deployed per-customer. There is no single shared API host; app.anomalo.com is the
+    multi-tenant SaaS instance, and enterprise customers get their own subdomain or self-hosted
+    deployment.
+authentication:
+  style: api-key
+  primary:
+    header: X-Anomalo-Token
+    value: API secret token
+    env_var: ANOMALO_API_SECRET_TOKEN
+    default: true
+  alternate:
+    header: Authorization
+    scheme: Bearer
+    note: Selected by constructing the client with `legacy_auth=False`.
+  override:
+    env_var: ANOMALO_AUTHORIZATION_HEADER
+    note: Supplies a raw Authorization header, bypassing token construction entirely.
+  scopes: none
+  detail: authentication/anomalo-authentication.yml
+request:
+  content_type: application/json
+  verb_semantics:
+    - verbs: [POST, PUT, PATCH]
+      payload: JSON request body
+      note: The client passes all keyword arguments as the JSON body.
+    - verbs: [GET, DELETE]
+      payload: query string
+      note: The client passes all keyword arguments as query parameters, including for DELETE.
+  redirects:
+    followed: false
+    note: >-
+      The client sets `allow_redirects=False`. A redirect is treated as a non-OK response rather than
+      being followed — relevant for instances behind an SSO-redirecting proxy.
+  user_agent:
+    pattern: anomalo/{version} (app={app}, python={python}, fastmcp={fastmcp})
+    note: Set by the MCP server; the base client sends the requests default.
+idempotency:
+  supported: false
+  idempotency_key_header: null
+  note: >-
+    No idempotency key, no request deduplication and no conditional-request support (ETag /
+    If-Match / If-None-Match) appear anywhere in the first-party client or the derived specs. Retries
+    of write operations are therefore not safe by contract. The one mitigating design is at the
+    application layer, not the protocol layer: `run_checks` will not start a new check run for a table
+    when one is already pending, which makes that specific operation naturally convergent. The MCP
+    server layers its own 15-minute per-table throttle on top of it.
+retries:
+  client_side: true
+  library: tenacity
+  policy:
+    max_attempts: 5
+    backoff: exponential with jitter
+    initial_seconds: 1
+    max_seconds: 10
+    reraise: true
+  retried:
+    - 5xx responses
+    - transport errors
+  not_retried:
+    - 4xx responses
+  note: >-
+    Retry behaviour is implemented in the client, not signalled by the API. The API publishes no
+    Retry-After header handling.
+pagination:
+  style: limit-offset
+  parameters:
+    - name: limit
+      in: query
+      type: integer
+      description: Maximum number of records to return.
+    - name: offset
+      in: query
+      type: integer
+      description: Number of records to skip.
+  applies_to:
+    - list_users
+    - list_user_access_groups
+    - list_tables_from_user_access_groups
+    - list_user_api_keys
+    - list_api_keys_for_current_user
+    - list_access_group_policies
+    - list_access_groups
+    - list_access_group_tables
+    - list_access_group_users
+    - list_table_upstream_lineage
+    - list_table_downstream_lineage
+  cursor: false
+  response_envelope: undocumented
+  note: >-
+    Limit/offset is applied inconsistently — it is present on the administrative list operations
+    (users, API keys, access groups, lineage) but absent from the primary data-plane listings
+    (`configured_tables`, `tables`, `get_checks_for_table`), which return unpaginated collections.
+    `get_check_intervals` is the exception that pages by time window rather than by count.
+  time_windowed:
+    operation: get_check_intervals
+    parameters: [start, end]
+    note: The client loops over paged results across a start/end date range.
+filtering:
+  - operation: tables
+    parameter: label_id
+    note: Also exposed as the convenience method `filter_tables_by_label`.
+  - operation: list_labels_for_organization
+    parameter: scope
+    values_note: Scope indicates whether a label applies to tables, checks, or both.
+  - operation: list_users
+    parameter: without_access_groups
+    type: boolean
+  - operation: get_table_information
+    parameters: [warehouse_id, table_id, table_name]
+    note: Resolve a table by any of three identifiers.
+tenancy:
+  model: organization
+  selection: sticky server-side state
+  operations:
+    read: get_active_organization_id
+    write: set_active_organization_id
+  note: >-
+    A significant and easily-missed convention. The active organization is NOT passed per request — it
+    is server-side state associated with the API key, changed with PUT /organization and sticky across
+    subsequent calls. Every scoped operation implicitly resolves against it. Concurrent clients sharing
+    one API key can therefore interfere with each other, and an agent must read the active org before
+    trusting the scope of any result. The experimental unstructured endpoints break this pattern and
+    take an explicit `/orgs/{org_id}/` path segment instead.
+identifiers:
+  numeric_ids:
+    - table_id
+    - check_id
+    - warehouse_id
+    - label_id
+    - user_id
+    - access_group_id
+    - policy_id
+    - organization id
+  durable_ids:
+    - name: check_static_id
+      description: >-
+        A user-set durable identifier for a check, designed to survive delete-and-recreate cycles so
+        external systems can reference a check stably. Distinct from the numeric `check_id`, which does
+        not survive recreation.
+      addressable_at: PATCH /tables/{table_id}/checks/static_id/{static_id}
+    - name: check ref
+      description: A third addressing mode for updating a check.
+      addressable_at: PATCH /tables/{table_id}/checks/ref/{ref}
+  qualified_names:
+    pattern: warehouse_name.schema.table_name
+    used_by: [get_table_information, get_table_profile]
+    note: Tables can be addressed by fully qualified name as an alternative to numeric table_id.
+async_operations:
+  model: job polling
+  pattern:
+    - step: Trigger
+      operation: run_checks
+      returns: check run job id
+    - step: Poll
+      operation: get_run_result
+      note: Returns execution_status per check; poll until complete.
+    - step: Generic task polling
+      operation: get_task
+      path: /task/{task_id}
+      note: Used for long-running operations such as warehouse refresh.
+  callbacks: none
+  webhooks: none
+  note: >-
+    There is no callback or webhook mechanism. All asynchrony is client-driven polling. Anomalo's
+    outbound alerting is configured through notification channels (Slack, Microsoft Teams, email and
+    similar) rather than exposed as subscribable HTTP webhooks with a documented payload contract.
+versioning:
+  scheme: uri-path
+  current: v1
+  path_segment: /api/public/v1/
+  header_versioning: false
+  date_versioning: false
+  server_version:
+    endpoint: /version.txt
+    note: >-
+      Not part of the versioned API. The client fetches `https://{instance}/version.txt` unauthenticated
+      to determine the deployment's semantic version (e.g. `v0.190.3`), returning `test` or `unknown`
+      when the file's shape is unexpected. This is how a client discovers which features a given
+      per-tenant deployment supports.
+  detail: lifecycle/anomalo-lifecycle.yml
+errors:
+  envelope: undocumented
+  client_behaviour:
+    - status_range: 4xx
+      raises: BadRequestException
+      retried: false
+      carries: raw response text
+    - status_range: 5xx
+      raises: RuntimeError
+      retried: true
+      carries: raw response text
+  problem_json: false
+  rfc9457: false
+  note: >-
+    The client raises on the raw response text rather than parsing a structured error object, which
+    strongly implies Anomalo does not publish a stable machine-readable error envelope. No error code
+    registry is public.
+  detail: errors/anomalo-problem-types.yml
+rate_limiting:
+  server_signalled: false
+  headers: none
+  note: >-
+    No rate limit headers (X-RateLimit-*, RateLimit-*, Retry-After) are read or referenced anywhere in
+    the first-party client. The only throttle observed anywhere in Anomalo's own tooling is client-side:
+    the MCP server's 15-minute per-table limit on full-table check runs.
+tracing:
+  request_id_header: none
+  correlation: none
+  note: No request-id or correlation-id convention is present in the client.
+tls:
+  verification: configurable
+  parameter: ssl_cert_verify
+  note: >-
+    The client exposes an SSL verification toggle, which is consistent with self-hosted deployments
+    behind an internal CA.
+  detail: security/anomalo-domain-security.yml

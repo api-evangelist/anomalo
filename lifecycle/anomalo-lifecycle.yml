@@ -1,0 +1,94 @@
+generated: '2026-07-31'
+method: searched
+source: >-
+  https://www.anomalo.com/ (site + sitemap survey), https://pypi.org/project/anomalo/, the first-party
+  client's version-discovery code, and live host probes
+note: >-
+  Anomalo publishes no public status page, no deprecation policy, no SLA document and no public API
+  changelog. Its API documentation is gated to customers, so the lifecycle signals below are those
+  observable from outside. Absences here are verified absences, not unchecked gaps.
+versioning:
+  scheme: uri-path
+  current: v1
+  path_segment: /api/public/v1/
+  stability: >-
+    The `v1` segment has been stable across the entire published history of the first-party client.
+  header_versioning: false
+  date_versioning: false
+deployment:
+  model: per-tenant
+  note: >-
+    Anomalo is deployed per customer (dedicated subdomain or self-hosted), so API surface can vary by
+    deployment. This makes server-version discovery a lifecycle concern rather than a curiosity.
+  version_discovery:
+    endpoint: /version.txt
+    authenticated: false
+    format: >-
+      Plain text. Two non-empty lines means the second is the semantic version (e.g. `v0.190.3`); one
+      line means `test`; anything else is `unknown`.
+    client_method: anomalo.Client.server_version
+    note: >-
+      This is the only public version signal Anomalo exposes, and it describes the deployment, not the
+      API contract.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: unknown
+  deprecation_header: unknown
+  note: >-
+    No deprecation or sunset policy is published. No `Sunset` (RFC 8594) or `Deprecation` header
+    handling appears anywhere in the first-party client, which would be the natural place for it. One
+    in-band deprecation signal does exist in the client's design: the `legacy_auth` constructor flag,
+    defaulting to True, which selects the `X-Anomalo-Token` header over `Authorization: Bearer`. The
+    naming implies token-header auth is the legacy path and bearer auth is the successor, but Anomalo
+    publishes no migration timeline and the legacy behaviour remains the default.
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in either derived OpenAPI carries `deprecated: true`. Anomalo does not mark deprecation
+  in any artifact available publicly.
+status_page:
+  url: null
+  published: false
+  probed:
+    - url: https://status.anomalo.com/
+      result: DNS does not resolve
+      fetched: '2026-07-31'
+    - url: https://www.anomalo.com/status/
+      result: not present in sitemap
+      fetched: '2026-07-31'
+  note: >-
+    No status page exists. Consistent with a per-tenant deployment model, where there is no single
+    shared availability surface to report on — but it leaves customers without an incident channel.
+sla:
+  url: null
+  published: false
+  uptime_target: null
+  note: >-
+    No public SLA. Service commitments are governed by the Subscription Agreement
+    (https://www.anomalo.com/legal/subscription/), which is a contract rather than a published uptime
+    target.
+support:
+  url: https://www.anomalo.com/request-support/
+  contact: https://www.anomalo.com/contact-us/
+  open_source_contact: opensource@anomalo.com
+  note: >-
+    The opensource@anomalo.com address is published in the Airflow provider's pyproject.toml and is the
+    only machine-readable Anomalo contact address found during enrichment.
+client_lifecycle:
+  package: anomalo
+  registry: pypi
+  current_version: 0.46.0
+  versioning: semver (0.x — no stable 1.0 released)
+  python_support: '>=3.9'
+  note: >-
+    The client is still pre-1.0 after 46 minor releases, so it makes no semver stability promise. The
+    Airflow provider pins `anomalo = "^0.17.0"`, meaning it accepts any 0.17+ release under caret
+    semantics — a wide range for a pre-1.0 dependency.
+  detail: changelog/anomalo-changelog.yml
+documentation_access:
+  public: false
+  note: >-
+    Anomalo's product and API documentation is gated to customers and prospects in a pilot.
+    docs.anomalo.com does not host documentation — it 302s to the WordPress marketing site, which
+    answers every path (including /llms.txt and /.well-known/*) with a rendered HTML page. Any tool
+    treating a 200 from that host as a document hit will produce false positives.

@@ -1,0 +1,67 @@
+generated: '2026-07-31'
+method: probed
+source: https://app.anomalo.com/.well-known/openid-configuration
+raw: well-known/anomalo-openid-configuration.json
+note: >-
+  IMPORTANT SCOPE BOUNDARY: these OAuth 2.0 / OIDC scopes govern USER SIGN-ON to the Anomalo web
+  application, not access to the Anomalo Public API. The Public API authenticates with an
+  `X-Anomalo-Token` API secret token and has NO scope model at all — no OAuth flow, no token endpoint,
+  no per-scope authorization. API authorization is instead enforced through access groups and policies
+  (see the Access Groups operations in openapi/anomalo-public-api-openapi.yml). This file exists because
+  the OIDC discovery document is real and anonymously retrievable, not because the API is OAuth-secured.
+  Nothing here was derived from the OpenAPI, which declares no oauth2 security scheme.
+applies_to: web application single sign-on
+api_authorization_model: api-key + access groups (see authentication/anomalo-authentication.yml)
+schemes:
+  - name: Anomalo OIDC
+    spec: OpenID Connect Discovery 1.0
+    issuer: https://app.anomalo.com
+    flows:
+      - flow: authorizationCode
+        authorizationUrl: https://app.anomalo.com/oauth/authorize/
+        tokenUrl: https://app.anomalo.com/oauth/token/
+        userinfoUrl: https://app.anomalo.com/oauth/userinfo/
+        pkce: true
+        pkce_methods: [S256]
+    response_types_supported: [code]
+    subject_types_supported: [public]
+    id_token_signing_alg_values_supported: [RS256]
+    token_endpoint_auth_methods_supported:
+      - client_secret_basic
+      - client_secret_post
+    jwks_uri: https://app.anomalo.com/oauth/.well-known/jwks.json
+    jwks_status: 404
+    jwks_note: >-
+      Advertised in the discovery document but returns 404 anonymously, so a relying party cannot
+      complete key discovery without additional access.
+scopes:
+  - scope: openid
+    description: >-
+      Standard OIDC scope. Requests an ID token identifying the authenticated Anomalo user.
+    flows: [authorizationCode]
+    standard: true
+    sources: [well-known/anomalo-openid-configuration.json]
+  - scope: profile
+    description: >-
+      Standard OIDC scope. Requests the user's basic profile claims.
+    flows: [authorizationCode]
+    standard: true
+    sources: [well-known/anomalo-openid-configuration.json]
+  - scope: email
+    description: >-
+      Standard OIDC scope. Requests the user's email address and its verification status.
+    flows: [authorizationCode]
+    standard: true
+    sources: [well-known/anomalo-openid-configuration.json]
+scope_count: 3
+custom_scopes: 0
+custom_scopes_note: >-
+  Anomalo declares only the three standard OIDC scopes. There are no Anomalo-specific scopes — no
+  read/write split, no per-resource scopes for tables, checks, warehouses or organizations.
+docs: null
+docs_note: Anomalo publishes no scopes or permissions reference page; its documentation is customer-gated.
+x-evidence:
+  fetched: '2026-07-31'
+  url: https://app.anomalo.com/.well-known/openid-configuration
+  http_status: 200
+  content_type: application/json

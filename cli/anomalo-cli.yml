@@ -1,0 +1,140 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  the first-party `anomalo` PyPI client 0.46.0 — anomalo/anomalo.py (entry point), anomalo/cli/cli.py,
+  anomalo/cli/state/, anomalo/cli/save_load/, pyproject.toml
+note: >-
+  Anomalo ships a first-party CLI in the same PyPI package as its Python client. Anomalo publishes no
+  CLI reference page (documentation is customer-gated), so the command surface below is read from the
+  package source. The CLI is built with python-fire over a `CLI` class that SUBCLASSES the API `Client`,
+  which has an important consequence: every public client method is automatically exposed as a CLI
+  subcommand, not just the purpose-built ones. The full command surface is therefore the union of the
+  six configuration-as-code commands below and all 90-plus API client methods.
+cli:
+  name: anomalo
+  binary: anomalo
+  entry_point: anomalo.anomalo:main
+  framework: python-fire
+  package: anomalo
+  registry: pypi
+  version: 0.46.0
+  license: Apache-2.0
+  official: true
+install:
+  - method: pip
+    command: pip install anomalo
+  - method: pipx
+    command: pipx install anomalo
+    note: Inferred from standard packaging; not published by Anomalo.
+    confidence: low
+configuration:
+  environment:
+    - name: ANOMALO_INSTANCE_HOST
+      required: true
+      description: Anomalo deployment host, e.g. https://my-company.anomalo.com/
+    - name: ANOMALO_API_SECRET_TOKEN
+      required: true
+      description: API secret token, sent as the `X-Anomalo-Token` header.
+    - name: ANOMALO_AUTHORIZATION_HEADER
+      required: false
+      description: Supplies a raw Authorization header, bypassing token construction.
+  flags:
+    - name: --host
+      description: Override the instance host.
+    - name: --api_token
+      description: Override the API secret token.
+    - name: --output_style
+      description: Output format. Defaults to `text` for the CLI (the library defaults to `json`).
+    - name: --ssl_cert_verify
+      description: Toggle TLS certificate verification, for self-hosted deployments behind an internal CA.
+  note: >-
+    Flags are the `Client.__init__` keyword arguments, exposed automatically by python-fire. Names use
+    the underscore form of the constructor parameter.
+command_groups:
+  - group: Configuration as code
+    description: >-
+      The purpose-built CLI surface. Treats Anomalo table and check configuration as versionable files
+      that can be pulled from a deployment, inspected, applied and destroyed — a Terraform-shaped
+      workflow for data quality configuration.
+    commands:
+      - command: anomalo pull
+        signature: pull <filename> [table_refs...] [--exclude_labels=<csv>]
+        description: >-
+          Pull current configuration from the deployment into a local state file. Optionally restrict to
+          specific table references and exclude tables carrying given labels.
+      - command: anomalo examine
+        signature: examine <table> [--check=<check>] [--format=yaml]
+        description: >-
+          Inspect the configuration of a table, or a single check on it, rendering as YAML by default.
+      - command: anomalo apply
+        signature: apply <filename> [--dryrun] [--noninteractive]
+        description: >-
+          Apply a configuration file to the deployment. `--dryrun` previews the change set;
+          `--noninteractive` suppresses confirmation prompts for CI use.
+      - command: anomalo destroy
+        signature: destroy <filename> [--dryrun] [--noninteractive]
+        description: Remove the configuration described by a file from the deployment.
+      - command: anomalo save_config
+        signature: save_config <filename> [--warehouse_id=<id>] [--table_id=<id>]
+        description: >-
+          Save configuration to a file, optionally scoped to one warehouse or one table. The older
+          save/load pair alongside the newer pull/apply state machine.
+      - command: anomalo load_config
+        signature: load_config <filename> [--warehouse_id=<id>] [--table_id=<id>] [--force]
+        description: Load configuration from a file into the deployment.
+  - group: API passthrough
+    description: >-
+      Every public method on the API client is reachable as a subcommand because the CLI class
+      subclasses it. These are not separately documented commands; they are the API surface in CLI form.
+    commands:
+      - command: anomalo ping
+        description: Verify connectivity and credentials.
+      - command: anomalo list_warehouses
+        description: List connected data warehouses.
+      - command: anomalo configured_tables
+        description: List tables configured for monitoring.
+      - command: anomalo get_table_information
+        signature: get_table_information [--warehouse_id=] [--table_id=] [--table_name=]
+        description: Resolve a table by id, name or warehouse.
+      - command: anomalo get_checks_for_table
+        signature: get_checks_for_table <table_id>
+        description: List the checks configured on a table.
+      - command: anomalo run_checks
+        signature: run_checks <table_id>
+        description: Trigger a data quality check run.
+      - command: anomalo get_run_result
+        signature: get_run_result [--job_id=] [--check_run_id=]
+        description: Retrieve check run results.
+      - command: anomalo get_table_profile
+        description: Retrieve a table's data profile.
+      - command: anomalo list_users
+        description: List users in the active organization.
+      - command: anomalo create_api_key_for_current_user
+        signature: create_api_key_for_current_user <description> <expires>
+        description: Issue a new API key for the calling user.
+    full_surface: openapi/anomalo-public-api-openapi.yml
+    full_surface_note: >-
+      The complete list is every non-underscore method on `anomalo.Client` — 90-plus commands. The ten
+      above are illustrative, chosen for the common flows; see the OpenAPI for the authoritative list.
+state_management:
+  model: declarative state file
+  modules:
+    - anomalo/cli/state/machine.py
+    - anomalo/cli/state/file.py
+    - anomalo/cli/state/models.py
+    - anomalo/cli/state/api.py
+    - anomalo/cli/state/system_check.py
+    - anomalo/cli/state/shacl_file.py
+  note: >-
+    The state machine backing pull/examine/apply/destroy. The presence of `shacl_file.py` indicates
+    SHACL (Shapes Constraint Language, a W3C RDF validation standard) participates in the
+    configuration-as-code format — an unusual and notable choice for a data quality tool's CLI.
+output:
+  default_style: text
+  json: '--output_style=json'
+  note: >-
+    The CLI class overrides the library default (`json`) to `text`, and the configuration-as-code
+    commands switch back to `json` internally before delegating.
+docs:
+  published: false
+  note: No public CLI reference. Command surface derived from package source.

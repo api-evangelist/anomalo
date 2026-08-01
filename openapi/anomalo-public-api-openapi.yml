@@ -1,0 +1,3542 @@
+openapi: 3.1.0
+info:
+  title: Anomalo Public API
+  version: v1
+  summary: Data quality monitoring, table configuration and check orchestration for the Anomalo platform.
+  description: |-
+    The Anomalo Public API (`/api/public/v1/`) drives Anomalo's data quality monitoring platform: connect and refresh warehouses, configure which tables are monitored, create and run data quality checks, read check-run results and table data profiles, manage table/check labels, administer users, API keys and access groups, record table lineage edges, and manage notification channels.
+
+    DERIVATION NOTE: this description was derived mechanically by API Evangelist from the first-party, Apache-2.0 licensed `anomalo` Python client published by Anomalo on PyPI (version 0.46.0). Every path, HTTP method and parameter below is read from that client's `_api_call()` invocations. Anomalo does not publish an OpenAPI description or public API reference of its own; its documentation is gated to customers. Response schemas are therefore left open (`type: object`) rather than invented. This is an unofficial, derived description and is not endorsed by Anomalo.
+  contact:
+    name: Anomalo
+    url: https://www.anomalo.com/contact-us/
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  x-derived-from: https://pypi.org/project/anomalo/0.46.0/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-unofficial: true
+servers:
+- url: https://{instance}/api/public/v1
+  description: Anomalo is deployed per-tenant. The client reads the host from the `ANOMALO_INSTANCE_HOST`
+    environment variable.
+  variables:
+    instance:
+      default: app.anomalo.com
+      description: Your Anomalo instance host, e.g. app.anomalo.com or my-company.anomalo.com
+tags:
+- name: API Keys
+- name: Access Groups
+- name: Check Runs
+- name: Checks
+- name: Exports
+- name: Labels
+- name: Lineage
+- name: Notification Channels
+- name: Organizations
+- name: Sensitive Columns
+- name: System
+- name: Tables
+- name: Tasks
+- name: Users
+- name: Warehouses
+security:
+- AnomaloToken: []
+paths:
+  /access_group_policies:
+    get:
+      operationId: list_access_group_policies
+      summary: List access group policies
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_group_policies
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_access_group_policy
+      summary: Create access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - create_access_group_policy
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_group_policies/{policy_id}:
+    get:
+      operationId: get_access_group_policy
+      summary: Get access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - get_access_group_policy
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: update_access_group_policy
+      summary: Update access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - update_access_group_policy
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_access_group_policy
+      summary: Delete access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - delete_access_group_policy
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups:
+    get:
+      operationId: list_access_groups
+      summary: List access groups
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_groups
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_access_group
+      summary: Create access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - create_access_group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+              required:
+              - name
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}:
+    get:
+      operationId: get_access_group
+      summary: Get access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - get_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: update_access_group
+      summary: Update access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - update_access_group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+              required:
+              - name
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_access_group
+      summary: Delete access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - delete_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/policies:
+    post:
+      operationId: attach_policy
+      summary: Attach policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - attach_policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                policy_id:
+                  type: integer
+              required:
+              - policy_id
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/policies/{policy_id}:
+    delete:
+      operationId: remove_policy
+      summary: Remove policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_policy
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/tables:
+    get:
+      operationId: list_access_group_tables
+      summary: List access group tables
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_group_tables
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: add_tables_to_access_group
+      summary: Add tables to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_tables_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_ids: {}
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_tables_from_access_group
+      summary: Remove tables from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_tables_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/tables/{table_id}:
+    post:
+      operationId: add_table_to_access_group
+      summary: Add table to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_table_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_table_from_access_group
+      summary: Remove table from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_table_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/users:
+    get:
+      operationId: list_access_group_users
+      summary: List access group users
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_group_users
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: add_users_to_access_group
+      summary: Add users to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_users_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_ids: {}
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_users_from_access_group
+      summary: Remove users from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_users_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: user_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/users/{user_id}:
+    post:
+      operationId: add_user_to_access_group
+      summary: Add user to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_user_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_user_from_access_group
+      summary: Remove user from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_user_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /api-keys:
+    get:
+      operationId: list_api_keys_for_current_user
+      summary: List api keys for current user
+      tags:
+      - API Keys
+      x-client-methods:
+      - list_api_keys_for_current_user
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_api_key_for_current_user
+      summary: Create api key for current user
+      tags:
+      - API Keys
+      x-client-methods:
+      - create_api_key_for_current_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description: {}
+                expires: {}
+              required:
+              - description
+              - expires
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /api-keys/{api_key_id}:
+    delete:
+      operationId: revoke_api_key_for_current_user
+      summary: Revoke api key for current user
+      tags:
+      - API Keys
+      x-client-methods:
+      - revoke_api_key_for_current_user
+      parameters:
+      - name: api_key_id
+        in: path
+        required: true
+        description: Path identifier `api_key_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /checks/{check_id}/labels:
+    put:
+      operationId: replace_labels_for_check
+      summary: Replace labels for check
+      tags:
+      - Labels
+      x-client-methods:
+      - replace_labels_for_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+                table_id:
+                  type: integer
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: check_id
+        in: path
+        required: true
+        description: Path identifier `check_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: add_new_labels_to_check
+      summary: Add new labels to check
+      tags:
+      - Labels
+      x-client-methods:
+      - add_new_labels_to_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+                table_id:
+                  type: integer
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: check_id
+        in: path
+        required: true
+        description: Path identifier `check_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /clone_check:
+    post:
+      operationId: clone_check
+      summary: Clone check
+      tags:
+      - Checks
+      x-client-methods:
+      - clone_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_id:
+                  type: integer
+                new_table_id:
+                  type: integer
+              required:
+              - table_id
+              - check_id
+              - new_table_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /configure_table:
+    post:
+      operationId: configure_table
+      summary: Configure table
+      tags:
+      - Tables
+      x-client-methods:
+      - configure_table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_cadence_type: {}
+                definition: {}
+                anomalo_view_sql: {}
+                time_column_type: {}
+                notify_after: {}
+                notification_channel_id:
+                  type: integer
+                notification_channel_ids: {}
+                time_columns: {}
+                fresh_after: {}
+                interval_skip_expr: {}
+                slack_users: {}
+                check_cadence_run_at_duration: {}
+                always_alert_on_errors: {}
+                disabled_quality_check_ids: {}
+                enable_data_quality: {}
+                scope_of_data_to_check: {}
+                use_auto_sla: {}
+                enable_observability: {}
+                custom_holidays: {}
+              required:
+              - table_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /configured_tables:
+    get:
+      operationId: configured_tables
+      summary: Configured tables
+      tags:
+      - Tables
+      x-client-methods:
+      - configured_tables
+      parameters:
+      - name: check_cadence_type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: warehouse_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: details
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /create_check:
+    post:
+      operationId: create_check
+      summary: Create check
+      tags:
+      - Checks
+      x-client-methods:
+      - create_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_type: {}
+                params: {}
+              required:
+              - table_id
+              - check_type
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /delete_check:
+    post:
+      operationId: delete_check
+      summary: Delete check
+      tags:
+      - Checks
+      x-client-methods:
+      - delete_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_id:
+                  type: integer
+              required:
+              - table_id
+              - check_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /deployment/organization:
+    post:
+      operationId: create_organization
+      summary: Create organization
+      tags:
+      - Organizations
+      x-client-methods:
+      - create_organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+              - name
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /download_entity_time_series_csv:
+    post:
+      operationId: download_entity_time_series_csv_post
+      summary: Download entity time series csv post
+      tags:
+      - Exports
+      x-client-methods:
+      - download_entity_time_series_csv_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quality_check_run_id:
+                  type: integer
+                entity_filter:
+                  type: object
+                metric_name:
+                  type: string
+              required:
+              - quality_check_run_id
+              - entity_filter
+              - metric_name
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_check_intervals:
+    get:
+      operationId: get_check_intervals
+      summary: Get check intervals
+      tags:
+      - Checks
+      x-client-methods:
+      - get_check_intervals
+      parameters:
+      - name: table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: start
+        in: query
+        required: false
+        schema: {}
+      - name: end
+        in: query
+        required: false
+        schema: {}
+      - name: page
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_checks_for_table:
+    get:
+      operationId: get_checks_for_table
+      summary: Get checks for table
+      tags:
+      - Checks
+      x-client-methods:
+      - get_checks_for_table
+      parameters:
+      - name: table_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: exclude_disabled
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_run_result:
+    get:
+      operationId: get_run_result
+      summary: Get run result
+      tags:
+      - Check Runs
+      x-client-methods:
+      - get_run_result
+      parameters:
+      - name: run_checks_job_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: quality_check_run_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: include_mc_fields
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_run_result_triage_history:
+    get:
+      operationId: get_run_result_triage_history
+      summary: Get run result triage history
+      tags:
+      - Check Runs
+      x-client-methods:
+      - get_run_result_triage_history
+      parameters:
+      - name: run_checks_job_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_table_information:
+    get:
+      operationId: get_table_information
+      summary: Get table information
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_information
+      parameters:
+      - name: warehouse_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: table_name
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_table_profile:
+    get:
+      operationId: get_table_profile
+      summary: Get table profile
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_profile
+      x-open-query: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /list_notification_channels:
+    get:
+      operationId: list_notification_channels
+      summary: List notification channels
+      tags:
+      - Notification Channels
+      x-client-methods:
+      - list_notification_channels
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /list_warehouses:
+    get:
+      operationId: list_warehouses
+      summary: List warehouses
+      tags:
+      - Warehouses
+      x-client-methods:
+      - list_warehouses
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /notification_channels:
+    post:
+      operationId: create_notification_channel
+      summary: Create notification channel
+      tags:
+      - Notification Channels
+      x-client-methods:
+      - create_notification_channel
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /notification_channels/{channel_id}:
+    get:
+      operationId: get_notification_channel
+      summary: Get notification channel
+      tags:
+      - Notification Channels
+      x-client-methods:
+      - get_notification_channel
+      parameters:
+      - name: channel_id
+        in: path
+        required: true
+        description: Path identifier `channel_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: update_notification_channel
+      summary: Update notification channel
+      tags:
+      - Notification Channels
+      x-client-methods:
+      - update_notification_channel
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: channel_id
+        in: path
+        required: true
+        description: Path identifier `channel_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_notification_channel
+      summary: Delete notification channel
+      tags:
+      - Notification Channels
+      x-client-methods:
+      - delete_notification_channel
+      parameters:
+      - name: channel_id
+        in: path
+        required: true
+        description: Path identifier `channel_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /org_labels:
+    get:
+      operationId: list_labels_for_organization
+      summary: List labels for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - list_labels_for_organization
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_label_for_organization
+      summary: Create label for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - create_label_for_organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+                scope: {}
+              required:
+              - name
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /org_labels/{destination_label_id}/merge:
+    post:
+      operationId: merge_labels_for_organization
+      summary: Merge labels for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - merge_labels_for_organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_label_id:
+                  type: integer
+              required:
+              - source_label_id
+              additionalProperties: false
+      parameters:
+      - name: destination_label_id
+        in: path
+        required: true
+        description: Path identifier `destination_label_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /org_labels/{label_id}:
+    patch:
+      operationId: update_label_name_for_organization
+      summary: Update label name for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - update_label_name_for_organization
+      - update_label_scope_for_organization
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+              additionalProperties: false
+      parameters:
+      - name: label_id
+        in: path
+        required: true
+        description: Path identifier `label_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_label_for_organization
+      summary: Delete label for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - delete_label_for_organization
+      parameters:
+      - name: label_id
+        in: path
+        required: true
+        description: Path identifier `label_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /organization:
+    get:
+      operationId: get_active_organization_id
+      summary: Get active organization id
+      tags:
+      - Organizations
+      x-client-methods:
+      - get_active_organization_id
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: set_active_organization_id
+      summary: Set active organization id
+      tags:
+      - Organizations
+      x-client-methods:
+      - set_active_organization_id
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /organizations:
+    get:
+      operationId: get_all_organizations
+      summary: Get all organizations
+      tags:
+      - Organizations
+      x-client-methods:
+      - get_all_organizations
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /ping:
+    get:
+      operationId: ping
+      summary: Ping
+      tags:
+      - System
+      x-client-methods:
+      - ping
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /run_checks:
+    post:
+      operationId: run_checks
+      summary: Run checks
+      tags:
+      - Checks
+      x-client-methods:
+      - run_checks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                interval_id:
+                  type: integer
+                check_ids: {}
+                force: {}
+                respect_data_freshness_gate: {}
+                execution_priority: {}
+              required:
+              - table_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /sensitive_column:
+    put:
+      operationId: add_sensitive_column
+      summary: Add sensitive column
+      tags:
+      - Sensitive Columns
+      x-client-methods:
+      - add_sensitive_column
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                column_name:
+                  type: string
+                censor_for_all_tables:
+                  type: boolean
+                table_id:
+                  type: integer
+              required:
+              - column_name
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_sensitive_column
+      summary: Remove sensitive column
+      tags:
+      - Sensitive Columns
+      x-client-methods:
+      - remove_sensitive_column
+      parameters:
+      - name: column_name
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: censor_for_all_tables
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /sensitive_columns:
+    get:
+      operationId: get_sensitive_columns
+      summary: Get sensitive columns
+      tags:
+      - Sensitive Columns
+      x-client-methods:
+      - get_sensitive_columns
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /table_lineage_edge:
+    post:
+      operationId: add_table_lineage_edge
+      summary: Add table lineage edge
+      tags:
+      - Lineage
+      x-client-methods:
+      - add_table_lineage_edge
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source: {}
+                destination: {}
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_table_lineage_edge
+      summary: Remove table lineage edge
+      tags:
+      - Lineage
+      x-client-methods:
+      - remove_table_lineage_edge
+      parameters:
+      - name: source_table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: source_external_ref
+        in: query
+        required: false
+        schema: {}
+      - name: destination_table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: destination_external_ref
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables:
+    get:
+      operationId: tables
+      summary: Tables
+      tags:
+      - Tables
+      x-client-methods:
+      - tables
+      - filter_tables_by_label
+      x-open-query: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_table
+      summary: Create table
+      tags:
+      - Tables
+      x-client-methods:
+      - create_table
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/configure:
+    post:
+      operationId: bulk_update_table_configuration
+      summary: Bulk update table configuration
+      tags:
+      - Tables
+      x-client-methods:
+      - bulk_update_table_configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter: {}
+                configuration: {}
+                overwrite: {}
+              required:
+              - filter
+              - configuration
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/access_groups:
+    get:
+      operationId: list_table_access_groups
+      summary: List table access groups
+      tags:
+      - Tables
+      x-client-methods:
+      - list_table_access_groups
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/access_groups/users:
+    get:
+      operationId: list_table_access_group_users
+      summary: List table access group users
+      tags:
+      - Tables
+      x-client-methods:
+      - list_table_access_group_users
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/checks/id/{check_id}:
+    patch:
+      operationId: update_check
+      summary: Update check
+      tags:
+      - Checks
+      x-client-methods:
+      - update_check
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: check_id
+        in: path
+        required: true
+        description: Path identifier `check_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/checks/ref/{ref}:
+    patch:
+      operationId: update_check_tables_table_id_checks_ref_ref
+      summary: Update check
+      tags:
+      - Checks
+      x-client-methods:
+      - update_check
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: ref
+        in: path
+        required: true
+        description: Path identifier `ref`.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/checks/static_id/{static_id}:
+    patch:
+      operationId: update_check_tables_table_id_checks_static_id_static_id
+      summary: Update check
+      tags:
+      - Checks
+      x-client-methods:
+      - update_check
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: static_id
+        in: path
+        required: true
+        description: Path identifier `static_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/config:
+    get:
+      operationId: get_table_configuration
+      summary: Get the configuration for a specific table including custom_holidays.
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_configuration
+      description: Get the configuration for a specific table including custom_holidays.
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: update_table_configuration
+      summary: Update table configuration
+      tags:
+      - Tables
+      x-client-methods:
+      - update_table_configuration
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/documentation:
+    get:
+      operationId: get_table_documentation
+      summary: Get table documentation
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_documentation
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: replace_table_documentation
+      summary: Replace table documentation
+      tags:
+      - Tables
+      x-client-methods:
+      - replace_table_documentation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                documentation: {}
+              required:
+              - documentation
+              additionalProperties: false
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/labels:
+    put:
+      operationId: replace_labels_for_table
+      summary: Replace labels for table
+      tags:
+      - Labels
+      x-client-methods:
+      - replace_labels_for_table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: add_new_labels_to_table
+      summary: Add new labels to table
+      tags:
+      - Labels
+      x-client-methods:
+      - add_new_labels_to_table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/lineage/downstream:
+    get:
+      operationId: list_table_downstream_lineage
+      summary: List table downstream lineage
+      tags:
+      - Lineage
+      x-client-methods:
+      - list_table_downstream_lineage
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      - name: max_hops
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/lineage/upstream:
+    get:
+      operationId: list_table_upstream_lineage
+      summary: List table upstream lineage
+      tags:
+      - Lineage
+      x-client-methods:
+      - list_table_upstream_lineage
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      - name: max_hops
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /task/{task_id}:
+    get:
+      operationId: get_task
+      summary: Get task
+      tags:
+      - Tasks
+      x-client-methods:
+      - get_task
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        description: Path identifier `task_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users:
+    get:
+      operationId: list_users
+      summary: List users
+      tags:
+      - Users
+      x-client-methods:
+      - list_users
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      - name: without_access_groups
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: add_new_user
+      summary: Add new user
+      tags:
+      - Users
+      x-client-methods:
+      - add_new_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+                email: {}
+                role: {}
+                is_service_account: {}
+              required:
+              - name
+              - email
+              - role
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/{user_id}:
+    get:
+      operationId: get_user
+      summary: Get user
+      tags:
+      - Users
+      x-client-methods:
+      - get_user
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/{user_id}/access_groups:
+    get:
+      operationId: list_user_access_groups
+      summary: List user access groups
+      tags:
+      - Users
+      x-client-methods:
+      - list_user_access_groups
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/{user_id}/access_groups/tables:
+    get:
+      operationId: list_tables_from_user_access_groups
+      summary: List tables from user access groups
+      tags:
+      - Users
+      x-client-methods:
+      - list_tables_from_user_access_groups
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/{user_id}/api-keys:
+    get:
+      operationId: list_user_api_keys
+      summary: List user api keys
+      tags:
+      - Users
+      x-client-methods:
+      - list_user_api_keys
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: add_user_api_key
+      summary: Add user api key
+      tags:
+      - Users
+      x-client-methods:
+      - add_user_api_key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description: {}
+                expires: {}
+              required:
+              - description
+              - expires
+              additionalProperties: false
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /users/{user_id}/api-keys/{api_key_id}:
+    delete:
+      operationId: revoke_user_api_key
+      summary: Revoke user api key
+      tags:
+      - Users
+      x-client-methods:
+      - revoke_user_api_key
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      - name: api_key_id
+        in: path
+        required: true
+        description: Path identifier `api_key_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /warehouse:
+    post:
+      operationId: create_warehouse
+      summary: Create warehouse
+      tags:
+      - Warehouses
+      x-client-methods:
+      - create_warehouse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                warehouse_type:
+                  type: string
+                connection:
+                  type: object
+                schema_crawl_priority:
+                  type: string
+              required:
+              - name
+              - warehouse_type
+              - connection
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /warehouse/{warehouse_id}:
+    get:
+      operationId: get_warehouse
+      summary: Get warehouse
+      tags:
+      - Warehouses
+      x-client-methods:
+      - get_warehouse
+      parameters:
+      - name: warehouse_id
+        in: path
+        required: true
+        description: Path identifier `warehouse_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: update_warehouse
+      summary: Update warehouse
+      tags:
+      - Warehouses
+      x-client-methods:
+      - update_warehouse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                connection:
+                  type: object
+                schema_crawl_priority:
+                  type: string
+              required:
+              - name
+              - connection
+              additionalProperties: true
+      parameters:
+      - name: warehouse_id
+        in: path
+        required: true
+        description: Path identifier `warehouse_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_warehouse
+      summary: Delete warehouse
+      tags:
+      - Warehouses
+      x-client-methods:
+      - delete_warehouse
+      parameters:
+      - name: warehouse_id
+        in: path
+        required: true
+        description: Path identifier `warehouse_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /warehouse/{warehouse_id}/refresh:
+    put:
+      operationId: refresh_warehouse
+      summary: Refresh warehouse
+      tags:
+      - Warehouses
+      x-client-methods:
+      - refresh_warehouse
+      - refresh_warehouse_tables
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: warehouse_id
+        in: path
+        required: true
+        description: Path identifier `warehouse_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /warehouse/{warehouse_id}/refresh/new:
+    put:
+      operationId: refresh_warehouse_new_tables
+      summary: Refresh warehouse new tables
+      tags:
+      - Warehouses
+      x-client-methods:
+      - refresh_warehouse_new_tables
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                schema_crawl_priority:
+                  type: string
+              additionalProperties: false
+      parameters:
+      - name: warehouse_id
+        in: path
+        required: true
+        description: Path identifier `warehouse_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  securitySchemes:
+    AnomaloToken:
+      type: apiKey
+      in: header
+      name: X-Anomalo-Token
+      description: Anomalo API secret token. The first-party client sends it as `X-Anomalo-Token` by default
+        (`legacy_auth=True`), read from the `ANOMALO_API_SECRET_TOKEN` environment variable.
+    BearerToken:
+      type: http
+      scheme: bearer
+      description: 'Anomalo API secret token sent as `Authorization: Bearer <token>`. Selected in the
+        first-party client with `legacy_auth=False`.'
+  schemas:
+    Error:
+      type: object
+      description: Error body. The first-party client raises BadRequestException for 4xx and RuntimeError
+        for 5xx, carrying the raw response text; Anomalo does not publish a documented error envelope
+        schema.
+      additionalProperties: true
+  responses:
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Authenticated but not permitted for the active organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter
+        backoff.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

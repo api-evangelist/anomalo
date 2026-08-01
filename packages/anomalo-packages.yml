@@ -1,0 +1,70 @@
+generated: '2026-07-31'
+method: searched
+source: >-
+  PyPI (pypi.org/project/anomalo, pypi.org/project/apache-airflow-providers-anomalo) and the
+  anomalo-hq / datagravity-ai GitHub organizations
+note: >-
+  Anomalo ships Python only. npm, Maven Central, NuGet, pkg.go.dev, RubyGems, Packagist and crates.io
+  were checked and carry no first-party Anomalo client. The `anomalo` package is both the REST client
+  library and the `anomalo` CLI binary (see cli/anomalo-cli.yml for the command surface).
+packages:
+  - language: python
+    registry: pypi
+    name: anomalo
+    version: 0.46.0
+    url: https://pypi.org/project/anomalo/
+    install: pip install anomalo
+    license: Apache-2.0
+    official: true
+    description: >-
+      A basic REST API client and command line client for Anomalo. Provides the `anomalo.Client` class
+      covering the full `/api/public/v1/` surface and the `anomalo` CLI entry point.
+    provides:
+      - sdk
+      - cli
+    python_requires: '>=3.9'
+    homepage: https://anomalo.com
+    published_from: https://github.com/datagravity-ai (GitHub Actions release workflow)
+    evidence:
+      - source: https://pypi.org/project/anomalo/
+        note: Maintained by the `anomalo` PyPI account; homepage set to anomalo.com.
+  - language: python
+    registry: pypi
+    name: apache-airflow-providers-anomalo
+    version: 0.2.2
+    url: https://pypi.org/project/apache-airflow-providers-anomalo/
+    install: pip install apache-airflow-providers-anomalo
+    license: Apache-2.0
+    official: true
+    description: >-
+      Apache Airflow provider for Anomalo. Ships three operators — AnomaloRunCheckOperator (trigger a
+      check run), AnomaloJobCompleteSensor (wait for a check run to finish) and AnomaloPassFailOperator
+      (assert the table's checks passed) — plus an "Anomalo" Airflow connection type taking a host and
+      an API secret token.
+    provides:
+      - integration
+    depends_on:
+      - anomalo
+    repository: https://github.com/anomalo-hq/anomalo-airflow-provider
+    author: Anomalo <opensource@anomalo.com>
+    evidence:
+      - source: https://github.com/anomalo-hq/anomalo-airflow-provider/blob/main/pyproject.toml
+        note: 'authors = ["Anomalo <opensource@anomalo.com>"]; repository under the anomalo-hq org.'
+registries_checked_no_result:
+  - npm
+  - maven-central
+  - nuget
+  - pkg.go.dev
+  - rubygems
+  - packagist
+  - crates.io
+related_first_party_repos:
+  - name: anomalo-gemini-extension
+    url: https://github.com/datagravity-ai/anomalo-gemini-extension
+    license: Apache-2.0
+    description: >-
+      Anomalo extension for the Google Gemini CLI, containing the official Anomalo MCP server. Installed
+      with `gemini extensions install https://github.com/datagravity-ai/anomalo-gemini-extension` rather
+      than from a package registry. See mcp/anomalo-mcp.yml.
+    distribution: gemini-cli-extension
+    official: true

@@ -1,0 +1,91 @@
+generated: '2026-07-31'
+method: probed
+source: live GET of /.well-known/* on every Anomalo host in apis.yml
+note: >-
+  Probed three hosts: the marketing site (www.anomalo.com, WordPress), the application/API host
+  (app.anomalo.com), and api.anomalo.com (a Kong gateway that answers every path with
+  `{"message":"no Route matched with those values"}` and exposes no public routes). Only one
+  well-known document exists: OpenID Connect discovery on the application host, which describes the
+  OAuth 2.0 / OIDC authorization-code flow used for user single sign-on into the Anomalo web app. Note
+  this is NOT the auth mechanism for the Anomalo Public API, which uses an `X-Anomalo-Token` API secret
+  token. The `jwks_uri` the discovery document advertises returns 404 when fetched anonymously.
+hosts:
+  - host: https://app.anomalo.com
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 200
+        content_type: application/json
+        file: anomalo-openid-configuration.json
+        spec: OpenID Connect Discovery 1.0
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /oauth/.well-known/jwks.json
+        status: 404
+        note: Advertised as `jwks_uri` in the discovery document but not anonymously retrievable.
+  - host: https://www.anomalo.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+        note: WordPress returns a 404 status with an HTML body; not an agent card.
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.anomalo.com
+    note: >-
+      Kong API gateway. Every path returns 404 with `{"message":"no Route matched with those values"}`.
+      No public routes are registered on this host; the Public API is served from the per-tenant
+      application host instead.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+findings:
+  security_txt: false
+  openid_configuration: true
+  oauth_authorization_server: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false
+x-evidence:
+  fetched: '2026-07-31'
+  hosts_probed:
+    - www.anomalo.com
+    - app.anomalo.com
+    - api.anomalo.com
+  paths_probed: 8

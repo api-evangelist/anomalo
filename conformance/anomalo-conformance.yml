@@ -1,0 +1,152 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/anomalo-public-api-openapi.yml, well-known/anomalo-openid-configuration.json,
+  security/anomalo-domain-security.yml, https://www.anomalo.com/legal/
+note: >-
+  Cross-cutting standards conformance for Anomalo. Every `conforms: true` below is backed by an
+  observed artifact; `false` entries are verified absences, not unknowns.
+standards:
+  - id: openapi
+    conforms: false
+    evidence: >-
+      Anomalo publishes no OpenAPI description. The two specs in openapi/ were derived by API Evangelist
+      from Anomalo's first-party Apache-2.0 client code; they are not published or endorsed by Anomalo.
+  - id: oauth2
+    conforms: partial
+    evidence: >-
+      OAuth 2.0 authorization-code flow is used for USER sign-on to the Anomalo web application,
+      advertised at https://app.anomalo.com/.well-known/openid-configuration. It is NOT the API
+      authentication mechanism — the Public API uses an `X-Anomalo-Token` API secret token with no
+      OAuth flow, no scopes and no token endpoint.
+  - id: oidc
+    conforms: true
+    evidence: >-
+      Live OpenID Connect Discovery 1.0 document at
+      https://app.anomalo.com/.well-known/openid-configuration (HTTP 200, application/json).
+      Declares issuer, authorization/token/userinfo endpoints, RS256 id_token signing, `code` response
+      type, and the openid/profile/email scopes.
+    caveat: >-
+      The advertised `jwks_uri` (https://app.anomalo.com/oauth/.well-known/jwks.json) returns 404 when
+      fetched anonymously, so the discovery document is not fully resolvable by an unauthenticated
+      relying party.
+    detail: scopes/anomalo-scopes.yml
+  - id: pkce
+    conforms: true
+    evidence: >-
+      `code_challenge_methods_supported: [S256]` in the OIDC discovery document (RFC 7636).
+  - id: rfc8414-oauth-authorization-server-metadata
+    conforms: false
+    evidence: >-
+      /.well-known/oauth-authorization-server returns 404 on every Anomalo host. Only the OIDC
+      discovery path is served.
+  - id: rfc9728-oauth-protected-resource-metadata
+    conforms: false
+    evidence: /.well-known/oauth-protected-resource returns 404 on every Anomalo host.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      No `application/problem+json` responses. The first-party client raises on raw response text
+      without parsing a structured error body. See errors/anomalo-problem-types.yml.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: /.well-known/security.txt returns 404 on www.anomalo.com, app.anomalo.com and api.anomalo.com.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation header handling in the first-party client; no deprecation policy
+      published. See lifecycle/anomalo-lifecycle.yml.
+  - id: rfc8615-well-known-uris
+    conforms: partial
+    evidence: >-
+      One well-known document served (OIDC discovery on app.anomalo.com). No api-catalog, no
+      security.txt, no agent card.
+  - id: idempotency
+    conforms: false
+    evidence: >-
+      No idempotency key header, no request deduplication, no conditional-request (ETag/If-Match)
+      support anywhere in the first-party client. See conventions/anomalo-conventions.yml.
+  - id: pagination
+    conforms: partial
+    evidence: >-
+      Limit/offset pagination on administrative list operations (users, API keys, access groups,
+      lineage) but absent from the primary data-plane listings (configured_tables, tables,
+      get_checks_for_table). No cursor pagination.
+  - id: rate-limit-headers
+    conforms: false
+    evidence: >-
+      No RateLimit-*, X-RateLimit-* or Retry-After handling in the first-party client. No published
+      rate limits.
+  - id: json-api
+    conforms: false
+    evidence: Plain JSON; no JSON:API document structure.
+  - id: graphql
+    conforms: false
+    evidence: No GraphQL endpoint published or referenced.
+  - id: asyncapi
+    conforms: false
+    evidence: >-
+      No event, streaming or webhook surface. Outbound alerting goes to notification channels (Slack,
+      Microsoft Teams, email) rather than subscribable HTTP webhooks with a documented payload contract.
+      Not applicable rather than deficient.
+  - id: mcp
+    conforms: true
+    evidence: >-
+      Official Apache-2.0 MCP server published by Anomalo at
+      https://github.com/datagravity-ai/anomalo-gemini-extension (FastMCP, stdio transport). Exposes 9
+      stable tools, 2 experimental tools and 4 MCP prompts. See mcp/anomalo-mcp.yml.
+  - id: a2a
+    conforms: false
+    evidence: >-
+      No agent card at /.well-known/agent-card.json or /.well-known/agent.json on any Anomalo host.
+  - id: tls-1.3
+    conforms: true
+    evidence: TLSv1.3 negotiated on both www.anomalo.com and app.anomalo.com.
+  - id: hsts
+    conforms: true
+    evidence: >-
+      HSTS present on both hosts (www.anomalo.com max-age=31536000; app.anomalo.com max-age=15768000).
+  - id: dnssec
+    conforms: false
+    evidence: No DNSSEC on anomalo.com.
+  - id: caa
+    conforms: false
+    evidence: No CAA records on anomalo.com.
+  - id: spf
+    conforms: false
+    evidence: >-
+      No SPF record on anomalo.com (TXT records carry only Apple and Anthropic domain verification
+      tokens).
+  - id: dmarc
+    conforms: true
+    evidence: '`v=DMARC1; p=quarantine; rua=mailto:dmarc@anomalo.com` on _dmarc.anomalo.com.'
+compliance_program:
+  published: true
+  url: https://www.anomalo.com/legal/
+  certifications:
+    - name: SOC 2 Type 2
+      evidence: >-
+        Badge displayed on https://www.anomalo.com/legal/ and announced by Anomalo at
+        https://www.anomalo.com/blog/anomalos-commitment-to-secure-data-for-our-customers/
+      auditor: Sensiba San Filippo, LLP
+    - name: ISO 27001
+      evidence: Badge displayed on https://www.anomalo.com/legal/
+  gdpr:
+    dpa_url: https://www.anomalo.com/legal/dpa/
+    note: >-
+      Anomalo publishes a Data Processing Addendum governing personal data handling under applicable
+      Data Protection Laws.
+  caveat: >-
+    Third-party vendor-profile sites additionally list HIPAA, FedRAMP and CSA STAR for Anomalo. Those
+    claims were NOT corroborated on any Anomalo-controlled page and are deliberately excluded here.
+  trust_center:
+    published: false
+    note: >-
+      trust.anomalo.com and security.anomalo.com do not resolve; /trust/ and /security/ return 404. The
+      certification badges live on the legal page rather than a dedicated trust center.
+vulnerability_disclosure:
+  published: false
+  note: >-
+    No security.txt, no /responsible-disclosure or /vulnerability-disclosure page, and no bug bounty
+    program on HackerOne, Bugcrowd or Intigriti was found. Probed by
+    0-working/probe-security-programs.py on 2026-07-31 with no hit.

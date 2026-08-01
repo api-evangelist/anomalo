@@ -1,0 +1,126 @@
+generated: '2026-07-31'
+method: derived
+source: >-
+  openapi/anomalo-public-api-openapi.yml (4xx/5xx responses) + the first-party `anomalo` PyPI client
+  0.46.0 exception model (anomalo/result.py, anomalo/client.py)
+format: unstructured
+rfc9457: false
+note: >-
+  Anomalo publishes no public error reference and no machine-readable error envelope. The first-party
+  client raises on the RAW RESPONSE TEXT rather than parsing a structured body, which is the strongest
+  available evidence that no stable error schema exists to parse. What follows is therefore the
+  transport-level error contract as the client implements it, not a code registry — there is no Anomalo
+  error code registry to harvest, and inventing one would be fabrication.
+envelope:
+  media_type: application/json
+  schema: undocumented
+  fields: unknown
+  problem_details: false
+  note: >-
+    Responses are decoded as JSON on success. On failure the client reads `response.text` and passes it
+    verbatim into the exception message without inspecting any field.
+exception_model:
+  - exception: BadRequestException
+    status_range: 400-499
+    module: anomalo.result
+    retried: false
+    carries:
+      - response text
+      - status code
+    note: >-
+      Explicitly excluded from the retry policy (`retry_if_not_exception_type(BadRequestException)`), so
+      client errors fail fast on the first attempt.
+  - exception: RuntimeError
+    status_range: 500-599
+    module: builtins
+    retried: true
+    carries:
+      - response text
+    note: >-
+      Retried up to 5 attempts with exponential jitter backoff (1s initial, 10s max) before being
+      re-raised. Callers see this only after all attempts are exhausted.
+problems:
+  - status: 400
+    title: Bad request
+    description: >-
+      Malformed request, invalid parameter values, or a request that violates a platform constraint.
+      Raised as BadRequestException; not retried.
+    retryable: false
+    source: openapi/anomalo-public-api-openapi.yml
+  - status: 401
+    title: Unauthorized
+    description: >-
+      Missing or invalid API secret token. The token is supplied as the `X-Anomalo-Token` header, or as
+      `Authorization: Bearer <token>` when the client is constructed with `legacy_auth=False`.
+    retryable: false
+    remediation: >-
+      Verify ANOMALO_API_SECRET_TOKEN, and confirm the token has not been revoked via
+      `revoke_api_key_for_current_user` or by an administrator.
+    source: openapi/anomalo-public-api-openapi.yml
+  - status: 403
+    title: Forbidden
+    description: >-
+      Authenticated but not permitted for the active organization or the requested resource. Anomalo
+      scopes access by organization (sticky server-side state) and by access-group policy.
+    retryable: false
+    remediation: >-
+      Check the active organization with GET /organization and switch it with PUT /organization if
+      needed; confirm the caller's access-group policies grant the table or resource.
+    observed:
+      url: https://app.anomalo.com/api/public/v1/ping
+      http_status: 403
+      content_type: application/json
+      fetched: '2026-07-31'
+      note: Observed live and anonymously during enrichment; confirms the API is reachable and gated.
+    source: openapi/anomalo-public-api-openapi.yml
+  - status: 404
+    title: Not found
+    description: >-
+      Resource not found. Also returned by api.anomalo.com (a Kong gateway) for every path, with the
+      body `{"message":"no Route matched with those values"}` — that host exposes no public routes and
+      is not the API host.
+    retryable: false
+    source: openapi/anomalo-public-api-openapi.yml
+  - status: 500
+    title: Server error
+    description: Internal error in the Anomalo deployment.
+    retryable: true
+    retry_policy: 5 attempts, exponential jitter backoff, 1s initial / 10s max
+    source: openapi/anomalo-public-api-openapi.yml
+application_level_errors:
+  note: >-
+    Distinct from HTTP errors: a data quality check can fail or error while the HTTP call succeeds with
+    200. These surface as fields on a check result, and are the errors that actually matter to an agent
+    consuming Anomalo.
+  fields:
+    - name: check_errored
+      type: boolean
+      description: True if the check encountered an error during execution.
+    - name: check_skipped
+      type: boolean
+      description: True if the check was skipped during execution.
+    - name: check_failed
+      type: boolean
+      description: True if the check failed (the data quality condition was not met).
+    - name: check_passed
+      type: boolean
+      description: True if the check passed.
+    - name: exception_msg
+      type: string
+      description: The exception message when the check errored.
+    - name: result_message
+      type: string
+      description: Human-readable description of the check result.
+    - name: check_history_message
+      type: string
+      description: Historical context for the check result.
+  execution_status:
+    values: [pending, running, completed, failed]
+    applies_to: check runs
+  source: >-
+    Field names read verbatim from the `get_table_check_status` tool docstring in Anomalo's first-party
+    MCP server (anomalo-mcp-server/anomalo_mcp.py).
+gaps:
+  - No error type URIs, no stable error codes, no `type`/`title`/`detail` problem-details structure.
+  - No documented error envelope schema; clients must treat failure bodies as opaque text.
+  - No Retry-After signalling; retry timing is entirely a client-side policy decision.

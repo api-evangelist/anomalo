@@ -1,0 +1,78 @@
+generated: '2026-07-31'
+method: searched
+source: https://pypi.org/project/anomalo/#history
+note: >-
+  Anomalo publishes NO dated API changelog, release-notes page or public version history for the
+  Anomalo Public API itself — product documentation is gated to customers. The only public, dated
+  release stream Anomalo maintains is the PyPI release history of its first-party `anomalo` client
+  library, recorded below. Because PyPI does not carry per-release notes for this package, entries
+  capture the version and upload date only; no highlights, breaking-change flags or summaries are
+  claimed, because none are published and inventing them would be fabrication.
+scheme: semver
+subject: first-party client library (not the API contract)
+package: anomalo
+registry: pypi
+url: https://pypi.org/project/anomalo/#history
+current_version: 0.46.0
+current_version_date: '2026-07-30'
+first_release: '0.0.2'
+first_release_date: '2021-09-20'
+total_releases: 76
+release_cadence: >-
+  Roughly weekly through 2026 — 12 releases in the four months to 2026-07-30. Steady, actively
+  maintained.
+stability_note: >-
+  Still pre-1.0 after 76 releases, so the package makes no semver stability guarantee; a minor bump may
+  carry breaking changes. Anomalo publishes no changelog that would let a consumer tell.
+entries:
+  - version: 0.46.0
+    date: '2026-07-30'
+  - version: 0.45.4
+    date: '2026-07-29'
+  - version: 0.45.3
+    date: '2026-07-22'
+  - version: 0.45.2
+    date: '2026-07-14'
+  - version: 0.45.1
+    date: '2026-07-11'
+  - version: 0.45.0
+    date: '2026-07-10'
+  - version: 0.44.3
+    date: '2026-06-29'
+  - version: 0.44.2
+    date: '2026-06-23'
+  - version: 0.44.1
+    date: '2026-06-15'
+  - version: 0.44.0
+    date: '2026-06-12'
+  - version: 0.43.0
+    date: '2026-06-09'
+  - version: 0.42.1
+    date: '2026-06-02'
+  - version: 0.42.0
+    date: '2026-05-29'
+  - version: 0.41.4
+    date: '2026-05-14'
+  - version: 0.41.3
+    date: '2026-05-06'
+  - version: 0.41.2
+    date: '2026-04-30'
+entries_note: Most recent 16 releases; the full history of 76 is on PyPI.
+related_release_streams:
+  - package: apache-airflow-providers-anomalo
+    registry: pypi
+    url: https://pypi.org/project/apache-airflow-providers-anomalo/
+    current_version: 0.2.2
+  - name: anomalo-gemini-extension
+    url: https://github.com/datagravity-ai/anomalo-gemini-extension
+    current_version: 0.1.1
+    note: Version read from gemini-extension.json.
+  - name: Anomalo deployment
+    discovery: GET https://{instance}/version.txt
+    note: >-
+      Per-tenant deployment version (e.g. `v0.190.3`), retrievable unauthenticated from an instance.
+      Anomalo publishes no release notes mapping these versions to changes.
+gaps:
+  - No public API changelog or release notes.
+  - No breaking-change policy or migration guides published.
+  - No per-release notes on the PyPI package.

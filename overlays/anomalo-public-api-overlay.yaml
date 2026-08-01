@@ -1,0 +1,94 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Anomalo Public API
+  version: 1.0.0
+extends: openapi/anomalo-public-api-openapi.yml
+x-generated: '2026-07-31'
+x-method: generated
+x-source: >-
+  API Evangelist enrichment pipeline. Captures the analysis layered on top of the derived Anomalo
+  OpenAPI without mutating it.
+actions:
+  - target: $.info
+    description: Record the API Evangelist rating context and the derivation provenance.
+    update:
+      x-apievangelist-enriched: '2026-07-31'
+      x-apievangelist-provenance: >-
+        Derived from Anomalo's first-party Apache-2.0 `anomalo` PyPI client 0.46.0. Anomalo publishes no
+        OpenAPI description; documentation is gated to customers.
+      x-apievangelist-artifacts:
+        authentication: authentication/anomalo-authentication.yml
+        conventions: conventions/anomalo-conventions.yml
+        errors: errors/anomalo-problem-types.yml
+        lifecycle: lifecycle/anomalo-lifecycle.yml
+        conformance: conformance/anomalo-conformance.yml
+        data_model: data-model/anomalo-data-model.yml
+        mcp: mcp/anomalo-mcp.yml
+        tool_crosswalk: mcp/anomalo-tool-crosswalk.yml
+        packages: packages/anomalo-packages.yml
+        cli: cli/anomalo-cli.yml
+
+  - target: $.info
+    description: Record the cross-cutting semantics an agent needs before making any call.
+    update:
+      x-tenancy-model: >-
+        Operations resolve against the caller's ACTIVE organization, which is sticky server-side state
+        set by PUT /organization — not a request parameter. Read GET /organization before trusting the
+        scope of any result.
+      x-idempotency: >-
+        Not supported. No idempotency key, no request deduplication, no conditional requests. Retrying a
+        write is not safe by contract.
+      x-rate-limiting: >-
+        Not signalled by the API. No RateLimit-*, X-RateLimit-* or Retry-After headers.
+      x-pagination: >-
+        Limit/offset on administrative list operations only; the primary data-plane listings are
+        unpaginated.
+      x-error-envelope: >-
+        Undocumented. Failure bodies must be treated as opaque text; there is no problem+json structure
+        and no error code registry.
+
+  - target: $.servers
+    description: Note the per-tenant deployment model and the unauthenticated version-discovery endpoint.
+    update:
+      x-deployment-model: per-tenant
+      x-version-discovery: >-
+        GET https://{instance}/version.txt (unauthenticated) returns the deployment's semantic version,
+        e.g. v0.190.3. This is the only public signal of which features a given deployment supports.
+
+  - target: $.components.securitySchemes.AnomaloToken
+    description: Flag the legacy/successor relationship between the two auth headers.
+    update:
+      x-auth-lineage: >-
+        The first-party client calls this path `legacy_auth` and defaults to it. The bearer scheme
+        appears to be the successor, but Anomalo publishes no migration timeline and this remains the
+        default.
+
+  - target: $.paths['/run_checks'].post
+    description: >-
+      Record the agent-safety guardrail Anomalo's own MCP server applies to this operation, which the
+      REST contract does not carry.
+    update:
+      x-agent-guardrail:
+        client_side_throttle: 15 minutes per table
+        scope: full-table runs (no check_id)
+        enforced_by: >-
+          Anomalo's official MCP server (DQ_CHECK_RUN_RATE_LIMIT), not the API.
+        note: >-
+          The only write operation Anomalo exposes to agents, and the only one it wraps in a throttle.
+      x-natural-convergence: >-
+        Will not start a new check run for a table when one is already pending, which makes repeated
+        triggers convergent in practice despite the absence of idempotency keys.
+
+  - target: $.paths['/tables/{table_id}/checks/static_id/{static_id}'].patch
+    description: Highlight the durable identifier as the correct integration key.
+    update:
+      x-durable-identifier: >-
+        `check_static_id` is user-set and survives delete-and-recreate cycles, unlike the numeric
+        `check_id`. External systems should key on this identifier.
+
+  - target: $.paths['/organization'].put
+    description: Warn about the shared-credential hazard in sticky organization state.
+    update:
+      x-concurrency-hazard: >-
+        Changing the active organization mutates state associated with the API key, not the request.
+        Concurrent clients sharing one key will interfere with each other's scoping.

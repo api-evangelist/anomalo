@@ -1,0 +1,464 @@
+openapi: 3.1.0
+info:
+  title: Anomalo Unstructured Data API
+  version: v1
+  summary: Document collection, document issue and content-analysis endpoints for Anomalo's unstructured
+    data monitoring.
+  description: |-
+    Anomalo's unstructured data monitoring surface, exposed under the same `/api/public/v1/` base path as the
+    Anomalo Public API but scoped to an organization (`/orgs/{org_id}/...`). Covers document collections
+    (sets of unstructured documents sourced from a cloud object store bucket or a warehouse table column),
+    the content-analysis check runs executed against them, the per-document and per-collection issues
+    Anomalo detects, and the generated metadata breakdown (tone, sentiment, language, theme, writing level,
+    score).
+
+    DERIVATION NOTE: this description was derived mechanically by API Evangelist from `anomalo_api.py` in
+    Anomalo's first-party, Apache-2.0 licensed `anomalo-gemini-extension` repository, where the
+    `AnomaloClient` subclass calls these endpoints via the inherited `_api_call()` helper. Every path, HTTP
+    method and parameter below is read from those invocations. These endpoints are not exposed by the
+    published `anomalo` PyPI client and back the MCP server's experimental unstructured tools, which are
+    gated behind the `ANOMALO_EXPERIMENTAL_UNSTRUCTURED_TOOLS` environment variable — treat them as
+    experimental. Response schemas are documented from the MCP tool docstrings, which enumerate the fields
+    Anomalo returns; nothing has been invented. This is an unofficial, derived description and is not
+    endorsed by Anomalo.
+  contact:
+    name: Anomalo
+    url: https://www.anomalo.com/contact-us/
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  x-derived-from: https://github.com/datagravity-ai/anomalo-gemini-extension/blob/main/anomalo-mcp-server/anomalo_api.py
+  x-derived-by: API Evangelist enrichment pipeline
+  x-unofficial: true
+  x-status: experimental
+servers:
+  - url: https://{instance}/api/public/v1
+    description: Anomalo is deployed per-tenant. The client reads the host from the `ANOMALO_INSTANCE_HOST`
+      environment variable.
+    variables:
+      instance:
+        default: app.anomalo.com
+        description: Your Anomalo instance host, e.g. app.anomalo.com or my-company.anomalo.com
+tags:
+  - name: Document Collections
+    description: Sets of unstructured documents Anomalo monitors and analyzes.
+  - name: Documents
+    description: Individual documents within a collection, and the issues found in them.
+  - name: Issues
+    description: Data quality issues detected across an organization's unstructured content.
+security:
+  - AnomaloToken: []
+paths:
+  /orgs/{org_id}/document_collections:
+    get:
+      operationId: listDocumentCollections
+      summary: List the unstructured document collections monitored in an organization
+      description: |-
+        Retrieves the unstructured document collections being monitored by Anomalo for the given organization.
+        A collection is a set of unstructured documents Anomalo has analyzed and enriched with metadata,
+        classification and quality issues. The source may be a cloud object storage bucket or a column in a
+        data warehouse table.
+      tags: [Document Collections]
+      x-client-methods: [get_collections]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The collections monitored in this organization.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collection'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /orgs/{org_id}/document_collections/{collection_id}:
+    get:
+      operationId: getDocumentCollection
+      summary: Retrieve a single unstructured document collection
+      tags: [Document Collections]
+      x-client-methods: [get_collection]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+        - name: collection_id
+          in: path
+          required: true
+          description: Document collection identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The requested collection.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collection'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /orgs/{org_id}/document_collections/{collection_id}/issues:
+    get:
+      operationId: listDocumentCollectionIssues
+      summary: List the data quality issues detected in a document collection
+      tags: [Issues]
+      x-client-methods: [get_collection_issues]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+        - name: collection_id
+          in: path
+          required: true
+          description: Document collection identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Issues detected across the collection.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /orgs/{org_id}/document_collections/{collection_id}/metadata:
+    get:
+      operationId: listDocumentCollectionMetadata
+      summary: Retrieve the generated metadata breakdown for a document collection
+      description: |-
+        Returns the metadata categories Anomalo generates for a collection — tone, sentiment, language,
+        theme, writing_level and score — with their respective entries and counts.
+      tags: [Document Collections]
+      x-client-methods: [get_collection_metadata]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+        - name: collection_id
+          in: path
+          required: true
+          description: Document collection identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Metadata categories and their entry counts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /orgs/{org_id}/document_collection_checkruns:
+    get:
+      operationId: listDocumentCollectionCheckRuns
+      summary: List content-analysis check runs for a document collection
+      description: |-
+        Returns the content-analysis runs executed against a document collection, most recent first. The
+        first-party adapter requests `limit=5` and filters by `document_collection_id` to locate the most
+        recent completed run.
+      tags: [Document Collections]
+      x-client-methods: [get_last_collection_check_run]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+        - name: document_collection_id
+          in: query
+          required: true
+          description: Document collection to list check runs for.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of check runs to return.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Content-analysis check runs for the collection.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /orgs/{org_id}/documents:
+    get:
+      operationId: listDocuments
+      summary: List the documents analyzed in a content-analysis check run
+      tags: [Documents]
+      x-client-methods: [get_collection_breakdown]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+        - name: document_collection_checkrun_id
+          in: query
+          required: true
+          description: The content-analysis check run whose documents should be returned.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Documents included in the check run.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /orgs/{org_id}/document_issues:
+    get:
+      operationId: listDocumentIssues
+      summary: List the data quality issues detected in a single document
+      tags: [Issues]
+      x-client-methods: [get_doc_issues]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+        - name: document_id
+          in: query
+          required: true
+          description: The document whose issues should be returned.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Issues detected in the document.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /orgs/{org_id}/issues:
+    get:
+      operationId: listOrganizationIssues
+      summary: List all unstructured data quality issues across an organization
+      tags: [Issues]
+      x-client-methods: [get_org_issues]
+      parameters:
+        - name: org_id
+          in: path
+          required: true
+          description: Anomalo organization (tenant) identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Issues detected across the organization's unstructured content.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+components:
+  securitySchemes:
+    AnomaloToken:
+      type: apiKey
+      in: header
+      name: X-Anomalo-Token
+      description: Anomalo API secret token, read from the `ANOMALO_API_SECRET_TOKEN` environment variable.
+    BearerToken:
+      type: http
+      scheme: bearer
+      description: 'Anomalo API secret token sent as `Authorization: Bearer <token>`.'
+  schemas:
+    Collection:
+      type: object
+      description: |-
+        An unstructured document collection. Field list taken verbatim from the `get_unstructured_collections`
+        MCP tool docstring in Anomalo's first-party MCP server.
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the collection.
+        name:
+          type: string
+          description: The name of the collection.
+        description:
+          type: string
+          description: A description of the collection.
+        organization_id:
+          type: string
+          description: The ID of the Anomalo organization that contains the collection.
+        source_type:
+          type: string
+          description: The type of source for the collection.
+          examples: [s3, data_warehouse]
+        bucket_name:
+          type: string
+          description: The bucket where the collection's documents are stored, if applicable.
+        path_prefix:
+          type: string
+          description: The prefix path within the bucket where the documents are stored, if applicable.
+        mime_types:
+          type: array
+          description: MIME types the collection is configured to process.
+          items:
+            type: string
+        ai_model:
+          type: string
+          description: The AI model used for analyzing the documents in the collection.
+      additionalProperties: true
+    CollectionBreakdown:
+      type: object
+      description: |-
+        A collection plus the results of its most recent content-analysis run. Field list taken verbatim
+        from the `get_unstructured_collection_results` MCP tool docstring in Anomalo's first-party MCP server.
+        Assembled client-side by the MCP adapter from several endpoints rather than returned whole by one.
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        organization_id:
+          type: string
+        source_type:
+          type: string
+        bucket_name:
+          type: string
+        path_prefix:
+          type: string
+        mime_types:
+          type: array
+          items:
+            type: string
+        ai_model:
+          type: string
+        last_check_run_id:
+          type: string
+          description: The ID of the last content-analysis run for the collection.
+        last_check_run_completed_at:
+          type: string
+          description: When the last content-analysis run completed.
+        document_count:
+          type: integer
+          description: The number of documents in the collection.
+        summary:
+          type: string
+          description: A generated summary of the documents in the collection.
+        score:
+          type: number
+          description: A quality score for the documents in the collection, from 0 to 10.
+        issues:
+          type: object
+          description: Issues found in the documents, keyed by issue name with counts as values.
+          additionalProperties: true
+        metadata:
+          type: object
+          description: Metadata categories (tone, sentiment, language, theme, writing_level, score) with
+            their entries and counts.
+          additionalProperties: true
+      additionalProperties: true
+    Error:
+      type: object
+      description: |-
+        Error body. The first-party client raises BadRequestException for 4xx and RuntimeError for 5xx,
+        carrying the raw response text; Anomalo does not publish a documented error envelope schema.
+      additionalProperties: true
+  responses:
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Authenticated but not permitted for this organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter
+        backoff.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

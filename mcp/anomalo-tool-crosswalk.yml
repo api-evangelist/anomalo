@@ -1,0 +1,311 @@
+generated: '2026-07-31'
+method: derived
+source: mcp/anomalo-mcp.yml + openapi/anomalo-public-api-openapi.yml + openapi/anomalo-unstructured-openapi.yml
+note: >-
+  Binds each tool published by Anomalo's official MCP server to the REST operation(s) that back it.
+  Confidence is high throughout because the MCP server's own source calls the first-party Python client
+  by method name, and that client's `_api_call()` invocations are what both OpenAPI descriptions were
+  derived from — so the binding is read from code on both ends rather than matched by name. Anomalo
+  exposes no GraphQL surface. The dominant pattern here is FAN-IN: several MCP tools are server-side
+  composites that stitch together multiple REST calls, which is why tool count (11) is far below
+  operation count (100).
+surfaces:
+  openapi:
+    - file: openapi/anomalo-public-api-openapi.yml
+      operations: 92
+      gated: false
+      note: Derived from the public PyPI client; the live API itself requires an API secret token.
+    - file: openapi/anomalo-unstructured-openapi.yml
+      operations: 8
+      gated: false
+      status: experimental
+      note: Derived from the MCP server's own adapter; not exposed by the published PyPI client.
+  graphql:
+    endpoint: null
+    note: Anomalo publishes no GraphQL surface.
+  mcp:
+    url: null
+    transport: stdio
+    hosted: false
+    gated: true
+    note: >-
+      Local stdio server. `tools/list` cannot be introspected anonymously — it requires
+      ANOMALO_INSTANCE_HOST and ANOMALO_API_SECRET_TOKEN. Tool definitions were read from the
+      Apache-2.0 source instead, which yields the same contract.
+crosswalk:
+  - tool: get_organizations
+    category: Organizations
+    rest:
+      - get_all_organizations
+      - get_active_organization_id
+    binding: rest
+    confidence: high
+    note: >-
+      Fan-in. Calls GET /organizations for the list and GET /organization for the active id, then merges
+      them into an `is_active` flag per organization.
+  - tool: set_active_organization
+    category: Organizations
+    rest:
+      - set_active_organization_id
+    binding: rest
+    confidence: high
+    note: One-to-one with PUT /organization.
+  - tool: get_labels
+    category: Labels
+    rest:
+      - list_labels_for_organization
+    binding: rest
+    confidence: high
+    note: >-
+      One-to-one with GET /org_labels, projected down to id/name/scope/slug. The REST operation's
+      optional `scope` filter is not exposed as a tool parameter.
+  - tool: get_configured_tables
+    category: Tables
+    rest:
+      - get_table_information
+      - configured_tables
+      - tables
+      - list_labels_for_organization
+    binding: rest
+    confidence: high
+    note: >-
+      Fan-in with branching. `table_name` resolves via GET /get_table_information then enriches;
+      `table_id` enriches directly; `label` first resolves the label name/slug to an id via
+      GET /org_labels then filters tables by that label id; with no argument it lists
+      GET /configured_tables. The enrichment step is client-side in the MCP adapter.
+  - tool: get_table_data_profile
+    category: Tables
+    rest:
+      - get_table_profile
+    binding: rest
+    confidence: high
+    note: >-
+      One-to-one with GET /get_table_profile, accepting either table_id or a fully qualified table_name.
+  - tool: get_table_check_status
+    category: Checks
+    rest:
+      - get_check_intervals
+      - get_run_result
+    binding: rest
+    confidence: high
+    note: >-
+      Fan-in. Locates the most recent completed check run via GET /get_check_intervals, then fetches its
+      results via GET /get_run_result. The bad-row/good-row CSV links it returns require an
+      authenticated browser session and cannot be followed programmatically.
+  - tool: get_checks_for_table
+    category: Checks
+    rest:
+      - get_checks_for_table
+    binding: rest
+    confidence: high
+    note: One-to-one with GET /get_checks_for_table, unwrapping the `checks` array.
+  - tool: run_data_quality_checks_on_table
+    category: Check Runs
+    rest:
+      - run_checks
+    binding: rest
+    confidence: high
+    note: >-
+      One-to-one with POST /run_checks, pinned to `respect_data_freshness_gate: false` and
+      `force: false`. The MCP server adds a client-side 15-minute per-table throttle on full-table runs
+      that has no equivalent in the REST contract.
+  - tool: data_quality_check_run_status
+    category: Check Runs
+    rest:
+      - get_run_result
+    binding: rest
+    confidence: high
+    note: >-
+      Wraps GET /get_run_result and reduces the check_runs array to a completion status
+      (pending/running/completed/failed).
+  - tool: get_unstructured_collections
+    category: Unstructured
+    rest:
+      - get_all_organizations
+      - listDocumentCollections
+    binding: rest
+    confidence: high
+    status: experimental
+    note: >-
+      Fan-out then fan-in: iterates GET /organizations and calls
+      GET /orgs/{org_id}/document_collections for each. Backed by the experimental unstructured spec,
+      which is not part of the published PyPI client.
+  - tool: get_unstructured_collection_results
+    category: Unstructured
+    rest:
+      - getDocumentCollection
+      - listDocumentCollectionCheckRuns
+      - listDocuments
+      - listDocumentIssues
+    binding: rest
+    confidence: high
+    status: experimental
+    note: >-
+      Heaviest composite in the server. Fetches the collection, finds its last content-analysis run,
+      lists that run's documents, then fetches issues per document and assembles a CollectionBreakdown
+      entirely client-side. No single REST operation returns this shape.
+mcp_only: []
+mcp_only_note: >-
+  Every tool resolves to at least one real REST operation. The MCP server adds no capability the API
+  lacks; what it adds is composition, projection and one client-side rate limit.
+rest_only:
+  - capability: Warehouse management
+    operations:
+      - list_warehouses
+      - get_warehouse
+      - create_warehouse
+      - update_warehouse
+      - delete_warehouse
+      - refresh_warehouse
+      - refresh_warehouse_new_tables
+    count: 7
+    note: Connecting and crawling data warehouses is entirely absent from the MCP surface.
+  - capability: Access group and policy administration
+    operations:
+      - list_access_groups
+      - create_access_group
+      - get_access_group
+      - update_access_group
+      - delete_access_group
+      - list_access_group_policies
+      - create_access_group_policy
+      - get_access_group_policy
+      - update_access_group_policy
+      - delete_access_group_policy
+      - attach_policy
+      - remove_policy
+      - list_access_group_users
+      - add_users_to_access_group
+      - remove_users_from_access_group
+      - add_user_to_access_group
+      - remove_user_from_access_group
+      - list_access_group_tables
+      - add_tables_to_access_group
+      - remove_tables_from_access_group
+      - add_table_to_access_group
+      - remove_table_from_access_group
+    count: 22
+    note: >-
+      The single largest REST-only capability. Deliberately withheld from agents — authorization
+      administration is the highest-consequence surface in the API.
+  - capability: User and API key administration
+    operations:
+      - list_users
+      - add_new_user
+      - get_user
+      - list_user_access_groups
+      - list_tables_from_user_access_groups
+      - list_user_api_keys
+      - add_user_api_key
+      - revoke_user_api_key
+      - list_api_keys_for_current_user
+      - create_api_key_for_current_user
+      - revoke_api_key_for_current_user
+    count: 11
+    note: Credential issuance and revocation are not agent-accessible.
+  - capability: Check authoring and mutation
+    operations:
+      - create_check
+      - delete_check
+      - clone_check
+      - update_check
+      - update_check_tables_table_id_checks_static_id_static_id
+      - update_check_tables_table_id_checks_ref_ref
+    count: 6
+    note: >-
+      Agents can run and read checks but cannot create, edit, clone or delete them. Read-and-execute
+      only.
+  - capability: Table configuration and documentation
+    operations:
+      - create_table
+      - configure_table
+      - get_table_configuration
+      - update_table_configuration
+      - bulk_update_table_configuration
+      - get_table_documentation
+      - replace_table_documentation
+    count: 7
+  - capability: Label mutation
+    operations:
+      - create_label_for_organization
+      - update_label_name_for_organization
+      - delete_label_for_organization
+      - merge_labels_for_organization
+      - replace_labels_for_check
+      - add_new_labels_to_check
+      - replace_labels_for_table
+      - add_new_labels_to_table
+    count: 8
+    note: >-
+      Agents can read labels (get_labels) but cannot create, edit, merge or apply them. Note
+      `update_label_name_for_organization` is a single PATCH /org_labels/{label_id} operation that the
+      first-party client also drives as `update_label_scope_for_organization`.
+  - capability: Lineage
+    operations:
+      - add_table_lineage_edge
+      - remove_table_lineage_edge
+      - list_table_upstream_lineage
+      - list_table_downstream_lineage
+    count: 4
+    note: >-
+      A notable read-side omission — lineage is exactly the context an agent triaging a failed check
+      would want, and it is not exposed as a tool.
+  - capability: Notification channels
+    operations:
+      - list_notification_channels
+      - get_notification_channel
+      - create_notification_channel
+      - update_notification_channel
+      - delete_notification_channel
+    count: 5
+  - capability: Sensitive columns
+    operations:
+      - get_sensitive_columns
+      - add_sensitive_column
+      - remove_sensitive_column
+    count: 3
+  - capability: Organization provisioning
+    operations:
+      - create_organization
+    count: 1
+  - capability: Unstructured content analysis (experimental)
+    operations:
+      - listDocumentCollectionIssues
+      - listDocumentCollectionMetadata
+      - listOrganizationIssues
+    count: 3
+    note: >-
+      Issue and metadata endpoints the MCP adapter defines but no registered tool calls directly;
+      `get_unstructured_collection_results` assembles its breakdown from the document-level endpoints
+      instead.
+  - capability: Misc
+    operations:
+      - ping
+      - get_task
+      - get_run_result_triage_history
+      - download_entity_time_series_csv_post
+      - list_table_access_groups
+      - list_table_access_group_users
+    count: 6
+coverage:
+  tools_named: 11
+  tools_bound: 11
+  tools_mcp_only: 0
+  rest_operations_total: 100
+  rest_operations_with_a_tool: 17
+  rest_operations_without_a_tool: 83
+  tool_to_rest_fan_in_max: 4
+  mcp_read_only_share: '10 of 11 tools are read-only; run_data_quality_checks_on_table is the only writer'
+observations:
+  - >-
+    The MCP surface is a deliberate 17% projection of the REST surface, and the cut is coherent: read
+    the state of data quality, and trigger a check run. Every mutating capability except triggering a
+    run — warehouses, access groups, users, API keys, check authoring, table configuration, labels,
+    lineage edges, notification channels — is withheld.
+  - >-
+    The one write tool carries a guardrail the REST API does not: a client-side 15-minute per-table
+    throttle on full-table check runs, enforced in the MCP server process. This is agent-safety
+    engineering living in the tool layer rather than the API layer.
+  - >-
+    Lineage read operations are the clearest gap. An agent asked to explain a failed check has the check
+    results but no upstream/downstream context, despite four lineage operations existing in REST.
