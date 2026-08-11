@@ -97,6 +97,8 @@ apis:
       - type: SourceCode
         url: https://github.com/datagravity-ai/anomalo-gemini-extension
 common:
+  - type: Releases
+    url: https://github.com/datagravity-ai/anomalo-gemini-extension/releases
   - type: Website
     url: https://www.anomalo.com/
   - type: Documentation
