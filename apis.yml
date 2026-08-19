@@ -18,7 +18,7 @@ image: https://www.anomalo.com/wp-content/uploads/2024/01/logo-1.svg
 url: https://raw.githubusercontent.com/api-evangelist/anomalo/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-specificationVersion: '0.21'
+specificationVersion: '0.23'
 created: '2026-07-31'
 modified: '2026-07-31'
 tags:
