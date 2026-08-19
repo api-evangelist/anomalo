@@ -2,14 +2,13 @@ generated: '2026-07-31'
 method: searched
 status: published
 source: https://github.com/datagravity-ai/anomalo-gemini-extension
-note: >-
-  Anomalo publishes an official MCP server as part of its Google Gemini CLI extension, Apache-2.0
-  licensed. It is a LOCAL stdio server, not a hosted/remote endpoint: it runs on the operator's own
-  machine and calls the customer's own Anomalo instance over the Public REST API. Tool definitions were
-  read verbatim from `anomalo-mcp-server/anomalo_mcp.py` (FastMCP `@mcp.tool` decorators), so the tool
-  names, parameters and descriptions below are the real published contract rather than a derived guess.
-  No `tools/list` introspection was performed against a live server because the server is not hosted and
-  requires a customer instance host plus API secret token.
+note: 'Anomalo publishes an official MCP server as part of its Google Gemini CLI extension, Apache-2.0
+  licensed. It is a LOCAL stdio server, not a hosted/remote endpoint: it runs on the operator''s own machine
+  and calls the customer''s own Anomalo instance over the Public REST API. Tool definitions were read
+  verbatim from `anomalo-mcp-server/anomalo_mcp.py` (FastMCP `@mcp.tool` decorators), so the tool names,
+  parameters and descriptions below are the real published contract rather than a derived guess. No `tools/list`
+  introspection was performed against a live server because the server is not hosted and requires a customer
+  instance host plus API secret token.'
 server:
   name: Anomalo MCP Server
   framework: fastmcp
@@ -29,198 +28,195 @@ server:
   authentication:
     method: environment
     variables:
-      - name: ANOMALO_INSTANCE_HOST
-        description: Your Anomalo deployment URL, e.g. https://my-anomalo-instance.anomalo.com/
-        required: true
-      - name: ANOMALO_API_SECRET_TOKEN
-        description: Anomalo API secret token, sent upstream as the `X-Anomalo-Token` header.
-        required: true
-      - name: ANOMALO_EXPERIMENTAL_UNSTRUCTURED_TOOLS
-        description: Set to 1/true/yes to register the two experimental unstructured-data tools.
-        required: false
-        default: 'N'
+    - name: ANOMALO_INSTANCE_HOST
+      description: Your Anomalo deployment URL, e.g. https://my-anomalo-instance.anomalo.com/
+      required: true
+    - name: ANOMALO_API_SECRET_TOKEN
+      description: Anomalo API secret token, sent upstream as the `X-Anomalo-Token` header.
+      required: true
+    - name: ANOMALO_EXPERIMENTAL_UNSTRUCTURED_TOOLS
+      description: Set to 1/true/yes to register the two experimental unstructured-data tools.
+      required: false
+      default: N
     configured_in: ~/.gemini/.env
   backing_api: openapi/anomalo-public-api-openapi.yml
 tools:
-  - name: get_organizations
-    category: Organizations
-    description: >-
-      Retrieves a list of accessible organizations from the Anomalo deployment, including which
-      organization is currently active for the given API key. Schema is `{id: int, name: str,
-      is_active: bool}`. Each organization is a tenant within the Anomalo deployment.
-    parameters: []
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#get_all_organizations
-      - openapi/anomalo-public-api-openapi.yml#get_active_organization_id
-  - name: set_active_organization
-    category: Organizations
-    description: >-
-      Sets the active organization for API access. API calls are scoped to the active organization,
-      which is sticky across calls.
-    parameters:
-      - name: id
-        type: integer
-        required: true
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#set_active_organization_id
-  - name: get_labels
-    category: Labels
-    description: >-
-      Retrieves the labels in the active organization. Labels organize tables and checks. Each has an
-      id, name, URL-friendly slug, and a scope indicating whether it applies to tables, checks or both.
-    parameters: []
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#list_labels_for_organization
-  - name: get_configured_tables
-    category: Tables
-    description: >-
-      Retrieves the configured tables in the active organization, optionally filtered by label name,
-      table name or table id.
-    parameters:
-      - name: label
-        type: string
-        required: false
-      - name: table_name
-        type: string
-        required: false
-      - name: table_id
-        type: integer
-        required: false
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#get_table_information
-      - openapi/anomalo-public-api-openapi.yml#configured_tables
-      - openapi/anomalo-public-api-openapi.yml#tables
-      - openapi/anomalo-public-api-openapi.yml#list_labels_for_organization
-  - name: get_table_data_profile
-    category: Tables
-    description: >-
-      Retrieves a profile of the data in a table from Anomalo's analysis of sampled data — column value
-      samples, per-column statistics (type, null %, uniqueness, min/max, mean, median, stddev, skew,
-      kurtosis) and rendered image URLs. Only available for monitored tables.
-    parameters:
-      - name: table_id
-        type: integer
-        required: false
-      - name: table_name
-        type: string
-        required: false
-        description: Fully qualified `warehouse_name.schema.my_table`.
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#get_table_profile
-  - name: get_table_check_status
-    category: Checks
-    description: >-
-      Retrieves the data quality health of a table by locating the last completed check run and
-      returning every check result, including failure descriptions, root cause analysis, and links to
-      CSV samples of bad/good rows plus the SQL to retrieve them.
-    parameters:
-      - name: table_id
-        type: integer
-        required: true
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#get_check_intervals
-      - openapi/anomalo-public-api-openapi.yml#get_run_result
-  - name: get_checks_for_table
-    category: Checks
-    description: >-
-      Retrieves the data quality checks configured for a table — check_id, check_static_id, name,
-      description, active flag and severity.
-    parameters:
-      - name: table_id
-        type: integer
-        required: true
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#get_checks_for_table
-  - name: run_data_quality_checks_on_table
-    category: Check Runs
-    description: >-
-      Triggers a data quality check run on a table, or a single check when check_id is given. Returns a
-      check_run_id. Does not wait for completion, and will not start a run if one is already pending.
-    parameters:
-      - name: table_id
-        type: integer
-        required: true
-      - name: check_id
-        type: [integer, string]
-        required: false
-        description: Numeric check id or durable check_static_id.
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#run_checks
-    client_side_rate_limit:
-      window: 15 minutes
-      scope: per table_id
-      applies_to: full-table runs (no check_id)
-      note: >-
-        Enforced in the MCP server itself (DQ_CHECK_RUN_RATE_LIMIT), not by the Anomalo API. Raises an
-        error naming the earliest permitted retry time.
-  - name: data_quality_check_run_status
-    category: Check Runs
-    description: >-
-      Retrieves the results of a check run by check_run_id. Status is one of pending, running, completed
-      or failed.
-    parameters:
-      - name: check_run_id
-        type: string
-        required: true
-    source_operations:
-      - openapi/anomalo-public-api-openapi.yml#get_run_result
+- name: get_organizations
+  category: Organizations
+  description: 'Retrieves a list of accessible organizations from the Anomalo deployment, including which
+    organization is currently active for the given API key. Schema is `{id: int, name: str, is_active:
+    bool}`. Each organization is a tenant within the Anomalo deployment.'
+  parameters: []
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#get_all_organizations
+  - openapi/anomalo-public-api-openapi.yml#get_active_organization_id
+- name: set_active_organization
+  category: Organizations
+  description: Sets the active organization for API access. API calls are scoped to the active organization,
+    which is sticky across calls.
+  parameters:
+  - name: id
+    type: integer
+    required: true
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#set_active_organization_id
+- name: get_labels
+  category: Labels
+  description: Retrieves the labels in the active organization. Labels organize tables and checks. Each
+    has an id, name, URL-friendly slug, and a scope indicating whether it applies to tables, checks or
+    both.
+  parameters: []
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#list_labels_for_organization
+- name: get_configured_tables
+  category: Tables
+  description: Retrieves the configured tables in the active organization, optionally filtered by label
+    name, table name or table id.
+  parameters:
+  - name: label
+    type: string
+    required: false
+  - name: table_name
+    type: string
+    required: false
+  - name: table_id
+    type: integer
+    required: false
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#get_table_information
+  - openapi/anomalo-public-api-openapi.yml#configured_tables
+  - openapi/anomalo-public-api-openapi.yml#tables
+  - openapi/anomalo-public-api-openapi.yml#list_labels_for_organization
+- name: get_table_data_profile
+  category: Tables
+  description: Retrieves a profile of the data in a table from Anomalo's analysis of sampled data — column
+    value samples, per-column statistics (type, null %, uniqueness, min/max, mean, median, stddev, skew,
+    kurtosis) and rendered image URLs. Only available for monitored tables.
+  parameters:
+  - name: table_id
+    type: integer
+    required: false
+  - name: table_name
+    type: string
+    required: false
+    description: Fully qualified `warehouse_name.schema.my_table`.
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#get_table_profile
+- name: get_table_check_status
+  category: Checks
+  description: Retrieves the data quality health of a table by locating the last completed check run and
+    returning every check result, including failure descriptions, root cause analysis, and links to CSV
+    samples of bad/good rows plus the SQL to retrieve them.
+  parameters:
+  - name: table_id
+    type: integer
+    required: true
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#get_check_intervals
+  - openapi/anomalo-public-api-openapi.yml#get_run_result
+- name: get_checks_for_table
+  category: Checks
+  description: Retrieves the data quality checks configured for a table — check_id, check_static_id, name,
+    description, active flag and severity.
+  parameters:
+  - name: table_id
+    type: integer
+    required: true
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#get_checks_for_table
+- name: run_data_quality_checks_on_table
+  category: Check Runs
+  description: Triggers a data quality check run on a table, or a single check when check_id is given.
+    Returns a check_run_id. Does not wait for completion, and will not start a run if one is already pending.
+  parameters:
+  - name: table_id
+    type: integer
+    required: true
+  - name: check_id
+    type:
+    - integer
+    - string
+    required: false
+    description: Numeric check id or durable check_static_id.
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#run_checks
+  client_side_rate_limit:
+    window: 15 minutes
+    scope: per table_id
+    applies_to: full-table runs (no check_id)
+    note: Enforced in the MCP server itself (DQ_CHECK_RUN_RATE_LIMIT), not by the Anomalo API. Raises
+      an error naming the earliest permitted retry time.
+- name: data_quality_check_run_status
+  category: Check Runs
+  description: Retrieves the results of a check run by check_run_id. Status is one of pending, running,
+    completed or failed.
+  parameters:
+  - name: check_run_id
+    type: string
+    required: true
+  source_operations:
+  - openapi/anomalo-public-api-openapi.yml#get_run_result
 experimental_tools:
   gated_by: ANOMALO_EXPERIMENTAL_UNSTRUCTURED_TOOLS
   tools:
-    - name: get_unstructured_collections
-      category: Unstructured
-      description: >-
-        Retrieves the unstructured document collections monitored by Anomalo — id, name, description,
-        organization_id, source_type (s3 or data_warehouse), bucket_name, path_prefix, mime_types and
-        ai_model.
-      parameters: []
-      source_operations:
-        - openapi/anomalo-unstructured-openapi.yml#listDocumentCollections
-    - name: get_unstructured_collection_results
-      category: Unstructured
-      description: >-
-        Retrieves the detailed metadata of a document collection from its last analysis run — document
-        count, generated summary, 0-10 quality score, issue counts, and a metadata breakdown across
-        tone, sentiment, language, theme and writing level.
-      parameters:
-        - name: organization_id
-          type: string
-          required: true
-        - name: collection_id
-          type: string
-          required: true
-      source_operations:
-        - openapi/anomalo-unstructured-openapi.yml#getDocumentCollection
-        - openapi/anomalo-unstructured-openapi.yml#listDocumentCollectionCheckRuns
-        - openapi/anomalo-unstructured-openapi.yml#listDocuments
-        - openapi/anomalo-unstructured-openapi.yml#listDocumentIssues
+  - name: get_unstructured_collections
+    category: Unstructured
+    description: Retrieves the unstructured document collections monitored by Anomalo — id, name, description,
+      organization_id, source_type (s3 or data_warehouse), bucket_name, path_prefix, mime_types and ai_model.
+    parameters: []
+    source_operations:
+    - openapi/anomalo-unstructured-openapi.yml#listDocumentCollections
+  - name: get_unstructured_collection_results
+    category: Unstructured
+    description: Retrieves the detailed metadata of a document collection from its last analysis run —
+      document count, generated summary, 0-10 quality score, issue counts, and a metadata breakdown across
+      tone, sentiment, language, theme and writing level.
+    parameters:
+    - name: organization_id
+      type: string
+      required: true
+    - name: collection_id
+      type: string
+      required: true
+    source_operations:
+    - openapi/anomalo-unstructured-openapi.yml#getDocumentCollection
+    - openapi/anomalo-unstructured-openapi.yml#listDocumentCollectionCheckRuns
+    - openapi/anomalo-unstructured-openapi.yml#listDocuments
+    - openapi/anomalo-unstructured-openapi.yml#listDocumentIssues
 prompts:
-  note: >-
-    The server also registers four MCP prompts (`@mcp.prompt`), which is unusual — most catalogued MCP
-    servers expose tools only.
+  note: The server also registers four MCP prompts (`@mcp.prompt`), which is unusual — most catalogued
+    MCP servers expose tools only.
   items:
-    - name: find_tables_with_label
-      description: Ask for the tables carrying a given label (name or slug), as JSON or formatted text.
-      parameters: [label, as_json]
-    - name: get_quality_check_results_for_table
-      description: Ask for the data quality status of a specific table_id.
-      parameters: [table_id, as_json]
-    - name: describe_table_data
-      description: Ask for a summary of a table's contents from its latest Anomalo data profile.
-      parameters: [table_id_or_name, as_json]
-    - name: run_and_wait_for_single_data_quality_check
-      description: >-
-        Locate a named check on a table, trigger it, then poll the check run to completion.
-      parameters: [table_id_or_name, check_name_or_id, as_json]
+  - name: find_tables_with_label
+    description: Ask for the tables carrying a given label (name or slug), as JSON or formatted text.
+    parameters:
+    - label
+    - as_json
+  - name: get_quality_check_results_for_table
+    description: Ask for the data quality status of a specific table_id.
+    parameters:
+    - table_id
+    - as_json
+  - name: describe_table_data
+    description: Ask for a summary of a table's contents from its latest Anomalo data profile.
+    parameters:
+    - table_id_or_name
+    - as_json
+  - name: run_and_wait_for_single_data_quality_check
+    description: Locate a named check on a table, trigger it, then poll the check run to completion.
+    parameters:
+    - table_id_or_name
+    - check_name_or_id
+    - as_json
 slash_commands:
   note: Gemini CLI custom commands shipped alongside the server in commands/anomalo/.
   items:
-    - command: /anomalo:describe-table
-      description: Retrieve table metadata and summarize the data.
-    - command: /anomalo:table-status
-      description: Check the data quality status of a table, by name or by label.
-    - command: /anomalo:org
-      description: Switch the active Anomalo organization context.
+  - command: /anomalo:describe-table
+    description: Retrieve table metadata and summarize the data.
+  - command: /anomalo:table-status
+    description: Check the data quality status of a table, by name or by label.
+  - command: /anomalo:org
+    description: Switch the active Anomalo organization context.
 coverage:
   tools_stable: 9
   tools_experimental: 2
@@ -230,10 +226,19 @@ x-evidence:
   fetched: '2026-07-31'
   repository: https://github.com/datagravity-ai/anomalo-gemini-extension
   files_read:
-    - gemini-extension.json
-    - anomalo-mcp-server/anomalo_mcp.py
-    - anomalo-mcp-server/anomalo_api.py
-    - anomalo-mcp-server/requirements.txt
+  - gemini-extension.json
+  - anomalo-mcp-server/anomalo_mcp.py
+  - anomalo-mcp-server/anomalo_api.py
+  - anomalo-mcp-server/requirements.txt
   live_tools_list: not-applicable
-  live_tools_list_reason: >-
-    stdio server, not a hosted endpoint; requires a customer instance host and API secret token.
+  live_tools_list_reason: stdio server, not a hosted endpoint; requires a customer instance host and API
+    secret token.
+deployment:
+  mode: none
+  endpoint: https://my-anomalo-instance.anomalo.com/
+  verified: probed
+  probe: dead
+  note: the endpoint this manifest claimed did not answer; recorded as none rather than deleted so the
+    claim stays auditable
+  checked: '2026-08-12'
+  source: catalog MCP census

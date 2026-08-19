@@ -1,0 +1,2092 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anomalo Public API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Anomalo-Token",
+      "value": "{{X-Anomalo-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Access Groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List access group policies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/access_group_policies",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List access group policies"
+        },
+        {
+          "info": {
+            "name": "Create access group policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/access_group_policies",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create access group policy"
+        },
+        {
+          "info": {
+            "name": "Get access group policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/access_group_policies/:policy_id",
+            "params": [
+              {
+                "name": "policy_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `policy_id`."
+              }
+            ]
+          },
+          "docs": "Get access group policy"
+        },
+        {
+          "info": {
+            "name": "Update access group policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/access_group_policies/:policy_id",
+            "params": [
+              {
+                "name": "policy_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `policy_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update access group policy"
+        },
+        {
+          "info": {
+            "name": "Delete access group policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/access_group_policies/:policy_id",
+            "params": [
+              {
+                "name": "policy_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `policy_id`."
+              }
+            ]
+          },
+          "docs": "Delete access group policy"
+        },
+        {
+          "info": {
+            "name": "List access groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/access_groups",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List access groups"
+        },
+        {
+          "info": {
+            "name": "Create access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/access_groups",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create access group"
+        },
+        {
+          "info": {
+            "name": "Get access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              }
+            ]
+          },
+          "docs": "Get access group"
+        },
+        {
+          "info": {
+            "name": "Update access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update access group"
+        },
+        {
+          "info": {
+            "name": "Delete access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              }
+            ]
+          },
+          "docs": "Delete access group"
+        },
+        {
+          "info": {
+            "name": "Attach policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/policies",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attach policy"
+        },
+        {
+          "info": {
+            "name": "Remove policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/policies/:policy_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "policy_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `policy_id`."
+              }
+            ]
+          },
+          "docs": "Remove policy"
+        },
+        {
+          "info": {
+            "name": "List access group tables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/tables",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List access group tables"
+        },
+        {
+          "info": {
+            "name": "Add tables to access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/tables",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add tables to access group"
+        },
+        {
+          "info": {
+            "name": "Remove tables from access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/tables",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Remove tables from access group"
+        },
+        {
+          "info": {
+            "name": "Add table to access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/tables/:table_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add table to access group"
+        },
+        {
+          "info": {
+            "name": "Remove table from access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/tables/:table_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ]
+          },
+          "docs": "Remove table from access group"
+        },
+        {
+          "info": {
+            "name": "List access group users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/users",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List access group users"
+        },
+        {
+          "info": {
+            "name": "Add users to access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/users",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add users to access group"
+        },
+        {
+          "info": {
+            "name": "Remove users from access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/users",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Remove users from access group"
+        },
+        {
+          "info": {
+            "name": "Add user to access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/users/:user_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add user to access group"
+        },
+        {
+          "info": {
+            "name": "Remove user from access group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/access_groups/:access_group_id/users/:user_id",
+            "params": [
+              {
+                "name": "access_group_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `access_group_id`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              }
+            ]
+          },
+          "docs": "Remove user from access group"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "API Keys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List api keys for current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/api-keys",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List api keys for current user"
+        },
+        {
+          "info": {
+            "name": "Create api key for current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/api-keys",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create api key for current user"
+        },
+        {
+          "info": {
+            "name": "Revoke api key for current user",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/api-keys/:api_key_id",
+            "params": [
+              {
+                "name": "api_key_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `api_key_id`."
+              }
+            ]
+          },
+          "docs": "Revoke api key for current user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Labels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Replace labels for check",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/checks/:check_id/labels",
+            "params": [
+              {
+                "name": "check_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `check_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replace labels for check"
+        },
+        {
+          "info": {
+            "name": "Add new labels to check",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/checks/:check_id/labels",
+            "params": [
+              {
+                "name": "check_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `check_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add new labels to check"
+        },
+        {
+          "info": {
+            "name": "List labels for organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/org_labels"
+          },
+          "docs": "List labels for organization"
+        },
+        {
+          "info": {
+            "name": "Create label for organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/org_labels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create label for organization"
+        },
+        {
+          "info": {
+            "name": "Merge labels for organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/org_labels/:destination_label_id/merge",
+            "params": [
+              {
+                "name": "destination_label_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `destination_label_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Merge labels for organization"
+        },
+        {
+          "info": {
+            "name": "Update label name for organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/org_labels/:label_id",
+            "params": [
+              {
+                "name": "label_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `label_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update label name for organization"
+        },
+        {
+          "info": {
+            "name": "Delete label for organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/org_labels/:label_id",
+            "params": [
+              {
+                "name": "label_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `label_id`."
+              }
+            ]
+          },
+          "docs": "Delete label for organization"
+        },
+        {
+          "info": {
+            "name": "Replace labels for table",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/labels",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replace labels for table"
+        },
+        {
+          "info": {
+            "name": "Add new labels to table",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/labels",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add new labels to table"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Checks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Clone check",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/clone_check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Clone check"
+        },
+        {
+          "info": {
+            "name": "Create check",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/create_check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create check"
+        },
+        {
+          "info": {
+            "name": "Delete check",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/delete_check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete check"
+        },
+        {
+          "info": {
+            "name": "Get check intervals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/get_check_intervals",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "start",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "end",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get check intervals"
+        },
+        {
+          "info": {
+            "name": "Get checks for table",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/get_checks_for_table",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "exclude_disabled",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get checks for table"
+        },
+        {
+          "info": {
+            "name": "Run checks",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/run_checks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run checks"
+        },
+        {
+          "info": {
+            "name": "Update check",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/checks/id/:check_id",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              },
+              {
+                "name": "check_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `check_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update check"
+        },
+        {
+          "info": {
+            "name": "Update check",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/checks/ref/:ref",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              },
+              {
+                "name": "ref",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `ref`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update check"
+        },
+        {
+          "info": {
+            "name": "Update check",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/checks/static_id/:static_id",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              },
+              {
+                "name": "static_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `static_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update check"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tables",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Configure table",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/configure_table",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Configure table"
+        },
+        {
+          "info": {
+            "name": "Configured tables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/configured_tables",
+            "params": [
+              {
+                "name": "check_cadence_type",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "warehouse_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "details",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Configured tables"
+        },
+        {
+          "info": {
+            "name": "Get table information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/get_table_information",
+            "params": [
+              {
+                "name": "warehouse_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "table_name",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get table information"
+        },
+        {
+          "info": {
+            "name": "Get table profile",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/get_table_profile"
+          },
+          "docs": "Get table profile"
+        },
+        {
+          "info": {
+            "name": "Tables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/tables"
+          },
+          "docs": "Tables"
+        },
+        {
+          "info": {
+            "name": "Create table",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/tables",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create table"
+        },
+        {
+          "info": {
+            "name": "Bulk update table configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/tables/configure",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Bulk update table configuration"
+        },
+        {
+          "info": {
+            "name": "List table access groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/access_groups",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List table access groups"
+        },
+        {
+          "info": {
+            "name": "List table access group users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/access_groups/users",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List table access group users"
+        },
+        {
+          "info": {
+            "name": "Get the configuration for a specific table including custom_holidays.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/config",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ]
+          },
+          "docs": "Get the configuration for a specific table including custom_holidays."
+        },
+        {
+          "info": {
+            "name": "Update table configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/config",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update table configuration"
+        },
+        {
+          "info": {
+            "name": "Get table documentation",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/documentation",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ]
+          },
+          "docs": "Get table documentation"
+        },
+        {
+          "info": {
+            "name": "Replace table documentation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/documentation",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Replace table documentation"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/deployment/organization",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create organization"
+        },
+        {
+          "info": {
+            "name": "Get active organization id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/organization"
+          },
+          "docs": "Get active organization id"
+        },
+        {
+          "info": {
+            "name": "Set active organization id",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/organization",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Set active organization id"
+        },
+        {
+          "info": {
+            "name": "Get all organizations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/organizations"
+          },
+          "docs": "Get all organizations"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Exports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Download entity time series csv post",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/download_entity_time_series_csv",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Download entity time series csv post"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Check Runs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get run result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/get_run_result",
+            "params": [
+              {
+                "name": "run_checks_job_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "quality_check_run_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "include_mc_fields",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get run result"
+        },
+        {
+          "info": {
+            "name": "Get run result triage history",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/get_run_result_triage_history",
+            "params": [
+              {
+                "name": "run_checks_job_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get run result triage history"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Notification Channels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List notification channels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/list_notification_channels"
+          },
+          "docs": "List notification channels"
+        },
+        {
+          "info": {
+            "name": "Create notification channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/notification_channels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create notification channel"
+        },
+        {
+          "info": {
+            "name": "Get notification channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/notification_channels/:channel_id",
+            "params": [
+              {
+                "name": "channel_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `channel_id`."
+              }
+            ]
+          },
+          "docs": "Get notification channel"
+        },
+        {
+          "info": {
+            "name": "Update notification channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://{instance}/api/public/v1/notification_channels/:channel_id",
+            "params": [
+              {
+                "name": "channel_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `channel_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update notification channel"
+        },
+        {
+          "info": {
+            "name": "Delete notification channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/notification_channels/:channel_id",
+            "params": [
+              {
+                "name": "channel_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `channel_id`."
+              }
+            ]
+          },
+          "docs": "Delete notification channel"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Warehouses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List warehouses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/list_warehouses"
+          },
+          "docs": "List warehouses"
+        },
+        {
+          "info": {
+            "name": "Create warehouse",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/warehouse",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create warehouse"
+        },
+        {
+          "info": {
+            "name": "Get warehouse",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/warehouse/:warehouse_id",
+            "params": [
+              {
+                "name": "warehouse_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `warehouse_id`."
+              }
+            ]
+          },
+          "docs": "Get warehouse"
+        },
+        {
+          "info": {
+            "name": "Update warehouse",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/warehouse/:warehouse_id",
+            "params": [
+              {
+                "name": "warehouse_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `warehouse_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update warehouse"
+        },
+        {
+          "info": {
+            "name": "Delete warehouse",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/warehouse/:warehouse_id",
+            "params": [
+              {
+                "name": "warehouse_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `warehouse_id`."
+              }
+            ]
+          },
+          "docs": "Delete warehouse"
+        },
+        {
+          "info": {
+            "name": "Refresh warehouse",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/warehouse/:warehouse_id/refresh",
+            "params": [
+              {
+                "name": "warehouse_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `warehouse_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Refresh warehouse"
+        },
+        {
+          "info": {
+            "name": "Refresh warehouse new tables",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/warehouse/:warehouse_id/refresh/new",
+            "params": [
+              {
+                "name": "warehouse_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `warehouse_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Refresh warehouse new tables"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "System",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Ping",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/ping"
+          },
+          "docs": "Ping"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Sensitive Columns",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add sensitive column",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://{instance}/api/public/v1/sensitive_column",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add sensitive column"
+        },
+        {
+          "info": {
+            "name": "Remove sensitive column",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/sensitive_column",
+            "params": [
+              {
+                "name": "column_name",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "censor_for_all_tables",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Remove sensitive column"
+        },
+        {
+          "info": {
+            "name": "Get sensitive columns",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/sensitive_columns"
+          },
+          "docs": "Get sensitive columns"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Lineage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add table lineage edge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/table_lineage_edge",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add table lineage edge"
+        },
+        {
+          "info": {
+            "name": "Remove table lineage edge",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/table_lineage_edge",
+            "params": [
+              {
+                "name": "source_table_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "source_external_ref",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "destination_table_id",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "destination_external_ref",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Remove table lineage edge"
+        },
+        {
+          "info": {
+            "name": "List table downstream lineage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/lineage/downstream",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "max_hops",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List table downstream lineage"
+        },
+        {
+          "info": {
+            "name": "List table upstream lineage",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/tables/:table_id/lineage/upstream",
+            "params": [
+              {
+                "name": "table_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `table_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "max_hops",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List table upstream lineage"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Tasks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get task",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/task/:task_id",
+            "params": [
+              {
+                "name": "task_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `task_id`."
+              }
+            ]
+          },
+          "docs": "Get task"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/users",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "without_access_groups",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List users"
+        },
+        {
+          "info": {
+            "name": "Add new user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/users",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add new user"
+        },
+        {
+          "info": {
+            "name": "Get user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              }
+            ]
+          },
+          "docs": "Get user"
+        },
+        {
+          "info": {
+            "name": "List user access groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/users/:user_id/access_groups",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List user access groups"
+        },
+        {
+          "info": {
+            "name": "List tables from user access groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/users/:user_id/access_groups/tables",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List tables from user access groups"
+        },
+        {
+          "info": {
+            "name": "List user api keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/users/:user_id/api-keys",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List user api keys"
+        },
+        {
+          "info": {
+            "name": "Add user api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://{instance}/api/public/v1/users/:user_id/api-keys",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add user api key"
+        },
+        {
+          "info": {
+            "name": "Revoke user api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://{instance}/api/public/v1/users/:user_id/api-keys/:api_key_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `user_id`."
+              },
+              {
+                "name": "api_key_id",
+                "value": "",
+                "type": "path",
+                "description": "Path identifier `api_key_id`."
+              }
+            ]
+          },
+          "docs": "Revoke user api key"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

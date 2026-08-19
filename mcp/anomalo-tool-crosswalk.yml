@@ -18,7 +18,8 @@ surfaces:
     - file: openapi/anomalo-unstructured-openapi.yml
       operations: 8
       gated: false
-      status: experimental
+      status: announced
+      status_raw: experimental
       note: Derived from the MCP server's own adapter; not exposed by the published PyPI client.
   graphql:
     endpoint: null

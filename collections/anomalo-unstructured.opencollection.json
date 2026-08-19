@@ -1,0 +1,236 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anomalo Unstructured Data API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-Anomalo-Token",
+      "value": "{{X-Anomalo-Token}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Document Collections",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List the unstructured document collections monitored in an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/document_collections",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              }
+            ]
+          },
+          "docs": "Retrieves the unstructured document collections being monitored by Anomalo for the given organization.\nA collection is a set of unstructured documents Anomalo has analyzed and enriched with metadata,\nclassification and quality issues. The source may be a cloud object storage bucket or a column in a\ndata warehouse table."
+        },
+        {
+          "info": {
+            "name": "Retrieve a single unstructured document collection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/document_collections/:collection_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              },
+              {
+                "name": "collection_id",
+                "value": "",
+                "type": "path",
+                "description": "Document collection identifier."
+              }
+            ]
+          },
+          "docs": "Retrieve a single unstructured document collection"
+        },
+        {
+          "info": {
+            "name": "Retrieve the generated metadata breakdown for a document collection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/document_collections/:collection_id/metadata",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              },
+              {
+                "name": "collection_id",
+                "value": "",
+                "type": "path",
+                "description": "Document collection identifier."
+              }
+            ]
+          },
+          "docs": "Returns the metadata categories Anomalo generates for a collection — tone, sentiment, language,\ntheme, writing_level and score — with their respective entries and counts."
+        },
+        {
+          "info": {
+            "name": "List content-analysis check runs for a document collection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/document_collection_checkruns",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              },
+              {
+                "name": "document_collection_id",
+                "value": "",
+                "type": "query",
+                "description": "Document collection to list check runs for."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of check runs to return."
+              }
+            ]
+          },
+          "docs": "Returns the content-analysis runs executed against a document collection, most recent first. The\nfirst-party adapter requests `limit=5` and filters by `document_collection_id` to locate the most\nrecent completed run."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Issues",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List the data quality issues detected in a document collection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/document_collections/:collection_id/issues",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              },
+              {
+                "name": "collection_id",
+                "value": "",
+                "type": "path",
+                "description": "Document collection identifier."
+              }
+            ]
+          },
+          "docs": "List the data quality issues detected in a document collection"
+        },
+        {
+          "info": {
+            "name": "List the data quality issues detected in a single document",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/document_issues",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              },
+              {
+                "name": "document_id",
+                "value": "",
+                "type": "query",
+                "description": "The document whose issues should be returned."
+              }
+            ]
+          },
+          "docs": "List the data quality issues detected in a single document"
+        },
+        {
+          "info": {
+            "name": "List all unstructured data quality issues across an organization",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/issues",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              }
+            ]
+          },
+          "docs": "List all unstructured data quality issues across an organization"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List the documents analyzed in a content-analysis check run",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://{instance}/api/public/v1/orgs/:org_id/documents",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Anomalo organization (tenant) identifier."
+              },
+              {
+                "name": "document_collection_checkrun_id",
+                "value": "",
+                "type": "query",
+                "description": "The content-analysis check run whose documents should be returned."
+              }
+            ]
+          },
+          "docs": "List the documents analyzed in a content-analysis check run"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
