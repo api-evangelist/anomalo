@@ -22,6 +22,23 @@ specificationVersion: '0.23'
 created: '2026-07-31'
 modified: '2026-07-31'
 tags:
+  - Data Quality
+  - Data Observability
+  - Data Monitoring
+  - Anomaly Detection
+  - Data Governance
+  - Data Lineage
+  - Data Profiling
+  - Data Validation
+  - Data Engineering
+  - Machine-Learning
+  - Snowflake
+  - Databricks
+  - BigQuery
+  - Enterprise Data
+  - MCP
+  - agent-native
+tags_raw:
   - data-quality
   - data-observability
   - data-monitoring
@@ -50,6 +67,14 @@ apis:
     humanURL: https://www.anomalo.com/product-overview/
     baseURL: https://app.anomalo.com/api/public/v1
     tags:
+      - Data Quality
+      - Data Observability
+      - Anomaly Detection
+      - Data Lineage
+      - Data Profiling
+      - Data Validation
+      - Data Governance
+    tags_raw:
       - data-quality
       - data-observability
       - anomaly-detection
@@ -85,6 +110,11 @@ apis:
     humanURL: https://github.com/datagravity-ai/anomalo-gemini-extension
     baseURL: https://github.com/datagravity-ai/anomalo-gemini-extension
     tags:
+      - MCP
+      - agent-native
+      - Data Quality
+      - Data Observability
+    tags_raw:
       - mcp
       - agent-native
       - data-quality
