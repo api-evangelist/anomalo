@@ -56,77 +56,395 @@ tags_raw:
   - mcp
   - agent-native
 apis:
-  - name: Anomalo Public API
-    description: >-
-      REST API for the Anomalo data quality platform. Connect and refresh data warehouses, configure
-      which tables are monitored, author and run data quality checks, read check-run results and table
-      data profiles, manage table and check labels, record table lineage edges, administer users, API
-      keys and access groups, and manage notification channels. Deployed per-tenant under
-      `https://<instance>/api/public/v1/`; authenticated with an API secret token sent as the
-      `X-Anomalo-Token` header (or as an `Authorization: Bearer` token).
-    humanURL: https://www.anomalo.com/product-overview/
-    baseURL: https://app.anomalo.com/api/public/v1
-    tags:
-      - Data Quality
-      - Data Observability
-      - Anomaly Detection
-      - Data Lineage
-      - Data Profiling
-      - Data Validation
-      - Data Governance
-    tags_raw:
-      - data-quality
-      - data-observability
-      - anomaly-detection
-      - data-lineage
-      - data-profiling
-      - data-validation
-      - data-governance
-    properties:
-      - type: OpenAPI
-        url: openapi/anomalo-public-api-openapi.yml
-      - type: OpenAPI
-        url: openapi/anomalo-unstructured-openapi.yml
-      - type: Overlay
-        url: overlays/anomalo-public-api-overlay.yaml
-      - type: Authentication
-        url: authentication/anomalo-authentication.yml
-      - type: Conventions
-        url: conventions/anomalo-conventions.yml
-      - type: ErrorCatalog
-        url: errors/anomalo-problem-types.yml
-      - type: DataModel
-        url: data-model/anomalo-data-model.yml
-      - type: Documentation
-        url: https://www.anomalo.com/product-overview/
-  - name: Anomalo MCP Server
-    description: >-
-      Official Anomalo MCP (Model Context Protocol) server, published by Anomalo as a Google Gemini CLI
-      extension under the Apache-2.0 license. Runs locally over stdio against a customer's own Anomalo
-      instance, exposing tools for listing organizations and labels, browsing configured tables, reading
-      table data profiles and data quality check status, listing configured checks, triggering check runs
-      and polling check-run results. Authenticated with `ANOMALO_INSTANCE_HOST` and
-      `ANOMALO_API_SECRET_TOKEN`.
-    humanURL: https://github.com/datagravity-ai/anomalo-gemini-extension
-    baseURL: https://github.com/datagravity-ai/anomalo-gemini-extension
-    tags:
-      - MCP
-      - agent-native
-      - Data Quality
-      - Data Observability
-    tags_raw:
-      - mcp
-      - agent-native
-      - data-quality
-      - data-observability
-    properties:
-      - type: MCPServer
-        url: mcp/anomalo-mcp.yml
-      - type: ToolCrosswalk
-        url: mcp/anomalo-tool-crosswalk.yml
-      - type: SourceCode
-        url: https://github.com/datagravity-ai/anomalo-gemini-extension
+- name: Anomalo MCP Server
+  description: >-
+    Official Anomalo MCP (Model Context Protocol) server, published by Anomalo as a Google Gemini CLI
+    extension under the Apache-2.0 license. Runs locally over stdio against a customer's own Anomalo instance,
+    exposing tools for listing organizations and labels, browsing configured tables, reading table data
+    profiles and data quality check status, listing configured checks, triggering check runs and polling
+    check-run results. Authenticated with `ANOMALO_INSTANCE_HOST` and `ANOMALO_API_SECRET_TOKEN`.
+  humanURL: https://github.com/datagravity-ai/anomalo-gemini-extension
+  baseURL: https://github.com/datagravity-ai/anomalo-gemini-extension
+  tags:
+  - MCP
+  - agent-native
+  - Data Quality
+  - Data Observability
+  tags_raw:
+  - mcp
+  - agent-native
+  - data-quality
+  - data-observability
+  properties:
+  - type: MCPServer
+    url: mcp/anomalo-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/anomalo-tool-crosswalk.yml
+  - type: SourceCode
+    url: https://github.com/datagravity-ai/anomalo-gemini-extension
+- aid: anomalo:anomalo-access-groups-api
+  name: Anomalo Access Groups API
+  description: The Access Groups API from Anomalo — 10 operation(s) for access groups.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Access Groups
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-access-groups-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-api-keys-api
+  name: Anomalo API Keys API
+  description: The API Keys API from Anomalo — 2 operation(s) for api keys.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - API Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-api-keys-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-check-runs-api
+  name: Anomalo Check Runs API
+  description: The Check Runs API from Anomalo — 2 operation(s) for check runs.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Check Runs
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-check-runs-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-checks-api
+  name: Anomalo Checks API
+  description: The Checks API from Anomalo — 9 operation(s) for checks.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Checks
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-checks-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-document-collections-api
+  name: Anomalo Document Collections API
+  description: Sets of unstructured documents Anomalo monitors and analyzes.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Document Collections
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-document-collections-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-documents-api
+  name: Anomalo Documents API
+  description: Individual documents within a collection, and the issues found in them.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-documents-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-exports-api
+  name: Anomalo Exports API
+  description: The Exports API from Anomalo — 1 operation(s) for exports.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Exports
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-exports-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-issues-api
+  name: Anomalo Issues API
+  description: Data quality issues detected across an organization's unstructured content.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Issues
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-issues-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-labels-api
+  name: Anomalo Labels API
+  description: The Labels API from Anomalo — 5 operation(s) for labels.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Labels
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-labels-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-lineage-api
+  name: Anomalo Lineage API
+  description: The Lineage API from Anomalo — 3 operation(s) for lineage.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Lineage
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-lineage-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-notification-channels-api
+  name: Anomalo Notification Channels API
+  description: The Notification Channels API from Anomalo — 3 operation(s) for notification channels.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Notification Channels
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-notification-channels-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-organizations-api
+  name: Anomalo Organizations API
+  description: The Organizations API from Anomalo — 3 operation(s) for organizations.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-organizations-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-sensitive-columns-api
+  name: Anomalo Sensitive Columns API
+  description: The Sensitive Columns API from Anomalo — 2 operation(s) for sensitive columns.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Sensitive Columns
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-sensitive-columns-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-system-api
+  name: Anomalo System API
+  description: The System API from Anomalo — 1 operation(s) for system.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - System
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-system-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-tables-api
+  name: Anomalo Tables API
+  description: The Tables API from Anomalo — 10 operation(s) for tables.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Tables
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-tables-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-tasks-api
+  name: Anomalo Tasks API
+  description: The Tasks API from Anomalo — 1 operation(s) for tasks.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Tasks
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-tasks-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-users-api
+  name: Anomalo Users API
+  description: The Users API from Anomalo — 6 operation(s) for users.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Users
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-users-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
+- aid: anomalo:anomalo-warehouses-api
+  name: Anomalo Warehouses API
+  description: The Warehouses API from Anomalo — 5 operation(s) for warehouses.
+  humanURL: https://www.anomalo.com/product-overview/
+  baseURL: https://app.anomalo.com/api/public/v1
+  tags:
+  - Warehouses
+  properties:
+  - type: OpenAPI
+    url: openapi/anomalo-warehouses-api-openapi.yml
+  - type: Authentication
+    url: authentication/anomalo-authentication.yml
+  - type: Conventions
+    url: conventions/anomalo-conventions.yml
+  - type: ErrorCatalog
+    url: errors/anomalo-problem-types.yml
+  - type: DataModel
+    url: data-model/anomalo-data-model.yml
+  - type: Documentation
+    url: https://www.anomalo.com/product-overview/
 common:
+  - type: Overlay
+    url: overlays/anomalo-public-api-overlay.yaml
   - type: Releases
     url: https://github.com/datagravity-ai/anomalo-gemini-extension/releases
   - type: Website
