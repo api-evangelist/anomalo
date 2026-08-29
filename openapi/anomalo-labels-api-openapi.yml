@@ -1,0 +1,429 @@
+openapi: 3.2.0
+info:
+  title: Anomalo Public Labels API
+  version: v1
+  summary: Data quality monitoring, table configuration and check orchestration for the Anomalo platform.
+  description: 'The Anomalo Public API (`/api/public/v1/`) drives Anomalo''s data quality monitoring platform: connect and refresh warehouses, configure which tables are monitored, create and run data quality checks, read check-run results and table data profiles, manage table/check labels, administer users, API keys and access groups, record table lineage edges, and manage notification channels.
+
+
+    DERIVATION NOTE: this description was derived mechanically by API Evangelist from the first-party, Apache-2.0 licensed `anomalo` Python client published by Anomalo on PyPI (version 0.46.0). Every path, HTTP method and parameter below is read from that client''s `_api_call()` invocations. Anomalo does not publish an OpenAPI description or public API reference of its own; its documentation is gated to customers. Response schemas are therefore left open (`type: object`) rather than invented. This is an unofficial, derived description and is not endorsed by Anomalo.'
+  contact:
+    name: Anomalo
+    url: https://www.anomalo.com/contact-us/
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  x-derived-from: https://pypi.org/project/anomalo/0.46.0/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-unofficial: true
+servers:
+- url: https://{instance}/api/public/v1
+  description: Anomalo is deployed per-tenant. The client reads the host from the `ANOMALO_INSTANCE_HOST` environment variable.
+  variables:
+    instance:
+      default: app.anomalo.com
+      description: Your Anomalo instance host, e.g. app.anomalo.com or my-company.anomalo.com
+security:
+- AnomaloToken: []
+tags:
+- name: Labels
+paths:
+  /checks/{check_id}/labels:
+    put:
+      operationId: replace_labels_for_check
+      summary: Replace labels for check
+      tags:
+      - Labels
+      x-client-methods:
+      - replace_labels_for_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+                table_id:
+                  type: integer
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: check_id
+        in: path
+        required: true
+        description: Path identifier `check_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: add_new_labels_to_check
+      summary: Add new labels to check
+      tags:
+      - Labels
+      x-client-methods:
+      - add_new_labels_to_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+                table_id:
+                  type: integer
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: check_id
+        in: path
+        required: true
+        description: Path identifier `check_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /org_labels:
+    get:
+      operationId: list_labels_for_organization
+      summary: List labels for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - list_labels_for_organization
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_label_for_organization
+      summary: Create label for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - create_label_for_organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+                scope: {}
+              required:
+              - name
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /org_labels/{destination_label_id}/merge:
+    post:
+      operationId: merge_labels_for_organization
+      summary: Merge labels for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - merge_labels_for_organization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_label_id:
+                  type: integer
+              required:
+              - source_label_id
+              additionalProperties: false
+      parameters:
+      - name: destination_label_id
+        in: path
+        required: true
+        description: Path identifier `destination_label_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /org_labels/{label_id}:
+    patch:
+      operationId: update_label_name_for_organization
+      summary: Update label name for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - update_label_name_for_organization
+      - update_label_scope_for_organization
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+              additionalProperties: false
+      parameters:
+      - name: label_id
+        in: path
+        required: true
+        description: Path identifier `label_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_label_for_organization
+      summary: Delete label for organization
+      tags:
+      - Labels
+      x-client-methods:
+      - delete_label_for_organization
+      parameters:
+      - name: label_id
+        in: path
+        required: true
+        description: Path identifier `label_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/labels:
+    put:
+      operationId: replace_labels_for_table
+      summary: Replace labels for table
+      tags:
+      - Labels
+      x-client-methods:
+      - replace_labels_for_table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: add_new_labels_to_table
+      summary: Add new labels to table
+      tags:
+      - Labels
+      x-client-methods:
+      - add_new_labels_to_table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                labels: {}
+              required:
+              - labels
+              additionalProperties: false
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    Forbidden:
+      description: Authenticated but not permitted for the active organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      description: Error body. The first-party client raises BadRequestException for 4xx and RuntimeError for 5xx, carrying the raw response text; Anomalo does not publish a documented error envelope schema.
+      additionalProperties: true
+  securitySchemes:
+    AnomaloToken:
+      type: apiKey
+      in: header
+      name: X-Anomalo-Token
+      description: Anomalo API secret token. The first-party client sends it as `X-Anomalo-Token` by default (`legacy_auth=True`), read from the `ANOMALO_API_SECRET_TOKEN` environment variable.
+    BearerToken:
+      type: http
+      scheme: bearer
+      description: 'Anomalo API secret token sent as `Authorization: Bearer <token>`. Selected in the first-party client with `legacy_auth=False`.'

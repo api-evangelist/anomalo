@@ -1,0 +1,456 @@
+openapi: 3.2.0
+info:
+  title: Anomalo Public Checks API
+  version: v1
+  summary: Data quality monitoring, table configuration and check orchestration for the Anomalo platform.
+  description: 'The Anomalo Public API (`/api/public/v1/`) drives Anomalo''s data quality monitoring platform: connect and refresh warehouses, configure which tables are monitored, create and run data quality checks, read check-run results and table data profiles, manage table/check labels, administer users, API keys and access groups, record table lineage edges, and manage notification channels.
+
+
+    DERIVATION NOTE: this description was derived mechanically by API Evangelist from the first-party, Apache-2.0 licensed `anomalo` Python client published by Anomalo on PyPI (version 0.46.0). Every path, HTTP method and parameter below is read from that client''s `_api_call()` invocations. Anomalo does not publish an OpenAPI description or public API reference of its own; its documentation is gated to customers. Response schemas are therefore left open (`type: object`) rather than invented. This is an unofficial, derived description and is not endorsed by Anomalo.'
+  contact:
+    name: Anomalo
+    url: https://www.anomalo.com/contact-us/
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  x-derived-from: https://pypi.org/project/anomalo/0.46.0/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-unofficial: true
+servers:
+- url: https://{instance}/api/public/v1
+  description: Anomalo is deployed per-tenant. The client reads the host from the `ANOMALO_INSTANCE_HOST` environment variable.
+  variables:
+    instance:
+      default: app.anomalo.com
+      description: Your Anomalo instance host, e.g. app.anomalo.com or my-company.anomalo.com
+security:
+- AnomaloToken: []
+tags:
+- name: Checks
+paths:
+  /clone_check:
+    post:
+      operationId: clone_check
+      summary: Clone check
+      tags:
+      - Checks
+      x-client-methods:
+      - clone_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_id:
+                  type: integer
+                new_table_id:
+                  type: integer
+              required:
+              - table_id
+              - check_id
+              - new_table_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /create_check:
+    post:
+      operationId: create_check
+      summary: Create check
+      tags:
+      - Checks
+      x-client-methods:
+      - create_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_type: {}
+                params: {}
+              required:
+              - table_id
+              - check_type
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /delete_check:
+    post:
+      operationId: delete_check
+      summary: Delete check
+      tags:
+      - Checks
+      x-client-methods:
+      - delete_check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_id:
+                  type: integer
+              required:
+              - table_id
+              - check_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_check_intervals:
+    get:
+      operationId: get_check_intervals
+      summary: Get check intervals
+      tags:
+      - Checks
+      x-client-methods:
+      - get_check_intervals
+      parameters:
+      - name: table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: start
+        in: query
+        required: false
+        schema: {}
+      - name: end
+        in: query
+        required: false
+        schema: {}
+      - name: page
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_checks_for_table:
+    get:
+      operationId: get_checks_for_table
+      summary: Get checks for table
+      tags:
+      - Checks
+      x-client-methods:
+      - get_checks_for_table
+      parameters:
+      - name: table_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: exclude_disabled
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /run_checks:
+    post:
+      operationId: run_checks
+      summary: Run checks
+      tags:
+      - Checks
+      x-client-methods:
+      - run_checks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                interval_id:
+                  type: integer
+                check_ids: {}
+                force: {}
+                respect_data_freshness_gate: {}
+                execution_priority: {}
+              required:
+              - table_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/checks/id/{check_id}:
+    patch:
+      operationId: update_check
+      summary: Update check
+      tags:
+      - Checks
+      x-client-methods:
+      - update_check
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: check_id
+        in: path
+        required: true
+        description: Path identifier `check_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/checks/ref/{ref}:
+    patch:
+      operationId: update_check_tables_table_id_checks_ref_ref
+      summary: Update check
+      tags:
+      - Checks
+      x-client-methods:
+      - update_check
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: ref
+        in: path
+        required: true
+        description: Path identifier `ref`.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/checks/static_id/{static_id}:
+    patch:
+      operationId: update_check_tables_table_id_checks_static_id_static_id
+      summary: Update check
+      tags:
+      - Checks
+      x-client-methods:
+      - update_check
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: static_id
+        in: path
+        required: true
+        description: Path identifier `static_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    Forbidden:
+      description: Authenticated but not permitted for the active organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      description: Error body. The first-party client raises BadRequestException for 4xx and RuntimeError for 5xx, carrying the raw response text; Anomalo does not publish a documented error envelope schema.
+      additionalProperties: true
+  securitySchemes:
+    AnomaloToken:
+      type: apiKey
+      in: header
+      name: X-Anomalo-Token
+      description: Anomalo API secret token. The first-party client sends it as `X-Anomalo-Token` by default (`legacy_auth=True`), read from the `ANOMALO_API_SECRET_TOKEN` environment variable.
+    BearerToken:
+      type: http
+      scheme: bearer
+      description: 'Anomalo API secret token sent as `Authorization: Bearer <token>`. Selected in the first-party client with `legacy_auth=False`.'

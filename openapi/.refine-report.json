@@ -1,0 +1,39 @@
+{
+  "provider": "anomalo",
+  "sources": [
+    "anomalo-public-api-openapi.yml",
+    "anomalo-unstructured-openapi.yml"
+  ],
+  "outputs": [
+    "anomalo-api-keys-api-openapi.yml",
+    "anomalo-access-groups-api-openapi.yml",
+    "anomalo-check-runs-api-openapi.yml",
+    "anomalo-checks-api-openapi.yml",
+    "anomalo-exports-api-openapi.yml",
+    "anomalo-labels-api-openapi.yml",
+    "anomalo-lineage-api-openapi.yml",
+    "anomalo-notification-channels-api-openapi.yml",
+    "anomalo-organizations-api-openapi.yml",
+    "anomalo-sensitive-columns-api-openapi.yml",
+    "anomalo-system-api-openapi.yml",
+    "anomalo-tables-api-openapi.yml",
+    "anomalo-tasks-api-openapi.yml",
+    "anomalo-users-api-openapi.yml",
+    "anomalo-warehouses-api-openapi.yml",
+    "anomalo-document-collections-api-openapi.yml",
+    "anomalo-documents-api-openapi.yml",
+    "anomalo-issues-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/anomalo-public-api-openapi.yml",
+    "archived openapi/anomalo-unstructured-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "anomalo-public-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "anomalo-unstructured-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+18 apis, 19 total)"
+  ],
+  "skipped": []
+}

@@ -1,0 +1,573 @@
+openapi: 3.2.0
+info:
+  title: Anomalo Public Tables API
+  version: v1
+  summary: Data quality monitoring, table configuration and check orchestration for the Anomalo platform.
+  description: 'The Anomalo Public API (`/api/public/v1/`) drives Anomalo''s data quality monitoring platform: connect and refresh warehouses, configure which tables are monitored, create and run data quality checks, read check-run results and table data profiles, manage table/check labels, administer users, API keys and access groups, record table lineage edges, and manage notification channels.
+
+
+    DERIVATION NOTE: this description was derived mechanically by API Evangelist from the first-party, Apache-2.0 licensed `anomalo` Python client published by Anomalo on PyPI (version 0.46.0). Every path, HTTP method and parameter below is read from that client''s `_api_call()` invocations. Anomalo does not publish an OpenAPI description or public API reference of its own; its documentation is gated to customers. Response schemas are therefore left open (`type: object`) rather than invented. This is an unofficial, derived description and is not endorsed by Anomalo.'
+  contact:
+    name: Anomalo
+    url: https://www.anomalo.com/contact-us/
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  x-derived-from: https://pypi.org/project/anomalo/0.46.0/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-unofficial: true
+servers:
+- url: https://{instance}/api/public/v1
+  description: Anomalo is deployed per-tenant. The client reads the host from the `ANOMALO_INSTANCE_HOST` environment variable.
+  variables:
+    instance:
+      default: app.anomalo.com
+      description: Your Anomalo instance host, e.g. app.anomalo.com or my-company.anomalo.com
+security:
+- AnomaloToken: []
+tags:
+- name: Tables
+paths:
+  /configure_table:
+    post:
+      operationId: configure_table
+      summary: Configure table
+      tags:
+      - Tables
+      x-client-methods:
+      - configure_table
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                check_cadence_type: {}
+                definition: {}
+                anomalo_view_sql: {}
+                time_column_type: {}
+                notify_after: {}
+                notification_channel_id:
+                  type: integer
+                notification_channel_ids: {}
+                time_columns: {}
+                fresh_after: {}
+                interval_skip_expr: {}
+                slack_users: {}
+                check_cadence_run_at_duration: {}
+                always_alert_on_errors: {}
+                disabled_quality_check_ids: {}
+                enable_data_quality: {}
+                scope_of_data_to_check: {}
+                use_auto_sla: {}
+                enable_observability: {}
+                custom_holidays: {}
+              required:
+              - table_id
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /configured_tables:
+    get:
+      operationId: configured_tables
+      summary: Configured tables
+      tags:
+      - Tables
+      x-client-methods:
+      - configured_tables
+      parameters:
+      - name: check_cadence_type
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: warehouse_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: details
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_table_information:
+    get:
+      operationId: get_table_information
+      summary: Get table information
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_information
+      parameters:
+      - name: warehouse_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      - name: table_name
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /get_table_profile:
+    get:
+      operationId: get_table_profile
+      summary: Get table profile
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_profile
+      x-open-query: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables:
+    get:
+      operationId: tables
+      summary: Tables
+      tags:
+      - Tables
+      x-client-methods:
+      - tables
+      - filter_tables_by_label
+      x-open-query: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_table
+      summary: Create table
+      tags:
+      - Tables
+      x-client-methods:
+      - create_table
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/configure:
+    post:
+      operationId: bulk_update_table_configuration
+      summary: Bulk update table configuration
+      tags:
+      - Tables
+      x-client-methods:
+      - bulk_update_table_configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter: {}
+                configuration: {}
+                overwrite: {}
+              required:
+              - filter
+              - configuration
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/access_groups:
+    get:
+      operationId: list_table_access_groups
+      summary: List table access groups
+      tags:
+      - Tables
+      x-client-methods:
+      - list_table_access_groups
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/access_groups/users:
+    get:
+      operationId: list_table_access_group_users
+      summary: List table access group users
+      tags:
+      - Tables
+      x-client-methods:
+      - list_table_access_group_users
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/config:
+    get:
+      operationId: get_table_configuration
+      summary: Get the configuration for a specific table including custom_holidays.
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_configuration
+      description: Get the configuration for a specific table including custom_holidays.
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    patch:
+      operationId: update_table_configuration
+      summary: Update table configuration
+      tags:
+      - Tables
+      x-client-methods:
+      - update_table_configuration
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /tables/{table_id}/documentation:
+    get:
+      operationId: get_table_documentation
+      summary: Get table documentation
+      tags:
+      - Tables
+      x-client-methods:
+      - get_table_documentation
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: replace_table_documentation
+      summary: Replace table documentation
+      tags:
+      - Tables
+      x-client-methods:
+      - replace_table_documentation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                documentation: {}
+              required:
+              - documentation
+              additionalProperties: false
+      parameters:
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    Forbidden:
+      description: Authenticated but not permitted for the active organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      description: Error body. The first-party client raises BadRequestException for 4xx and RuntimeError for 5xx, carrying the raw response text; Anomalo does not publish a documented error envelope schema.
+      additionalProperties: true
+  securitySchemes:
+    AnomaloToken:
+      type: apiKey
+      in: header
+      name: X-Anomalo-Token
+      description: Anomalo API secret token. The first-party client sends it as `X-Anomalo-Token` by default (`legacy_auth=True`), read from the `ANOMALO_API_SECRET_TOKEN` environment variable.
+    BearerToken:
+      type: http
+      scheme: bearer
+      description: 'Anomalo API secret token sent as `Authorization: Bearer <token>`. Selected in the first-party client with `legacy_auth=False`.'

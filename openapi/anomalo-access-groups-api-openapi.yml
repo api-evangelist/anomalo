@@ -1,0 +1,895 @@
+openapi: 3.2.0
+info:
+  title: Anomalo Public Access Groups API
+  version: v1
+  summary: Data quality monitoring, table configuration and check orchestration for the Anomalo platform.
+  description: 'The Anomalo Public API (`/api/public/v1/`) drives Anomalo''s data quality monitoring platform: connect and refresh warehouses, configure which tables are monitored, create and run data quality checks, read check-run results and table data profiles, manage table/check labels, administer users, API keys and access groups, record table lineage edges, and manage notification channels.
+
+
+    DERIVATION NOTE: this description was derived mechanically by API Evangelist from the first-party, Apache-2.0 licensed `anomalo` Python client published by Anomalo on PyPI (version 0.46.0). Every path, HTTP method and parameter below is read from that client''s `_api_call()` invocations. Anomalo does not publish an OpenAPI description or public API reference of its own; its documentation is gated to customers. Response schemas are therefore left open (`type: object`) rather than invented. This is an unofficial, derived description and is not endorsed by Anomalo.'
+  contact:
+    name: Anomalo
+    url: https://www.anomalo.com/contact-us/
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+  x-derived-from: https://pypi.org/project/anomalo/0.46.0/
+  x-derived-by: API Evangelist enrichment pipeline
+  x-unofficial: true
+servers:
+- url: https://{instance}/api/public/v1
+  description: Anomalo is deployed per-tenant. The client reads the host from the `ANOMALO_INSTANCE_HOST` environment variable.
+  variables:
+    instance:
+      default: app.anomalo.com
+      description: Your Anomalo instance host, e.g. app.anomalo.com or my-company.anomalo.com
+security:
+- AnomaloToken: []
+tags:
+- name: Access Groups
+paths:
+  /access_group_policies:
+    get:
+      operationId: list_access_group_policies
+      summary: List access group policies
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_group_policies
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_access_group_policy
+      summary: Create access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - create_access_group_policy
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_group_policies/{policy_id}:
+    get:
+      operationId: get_access_group_policy
+      summary: Get access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - get_access_group_policy
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: update_access_group_policy
+      summary: Update access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - update_access_group_policy
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_access_group_policy
+      summary: Delete access group policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - delete_access_group_policy
+      parameters:
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups:
+    get:
+      operationId: list_access_groups
+      summary: List access groups
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_groups
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: create_access_group
+      summary: Create access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - create_access_group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+              required:
+              - name
+              additionalProperties: false
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}:
+    get:
+      operationId: get_access_group
+      summary: Get access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - get_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      operationId: update_access_group
+      summary: Update access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - update_access_group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: {}
+              required:
+              - name
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: delete_access_group
+      summary: Delete access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - delete_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/policies:
+    post:
+      operationId: attach_policy
+      summary: Attach policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - attach_policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                policy_id:
+                  type: integer
+              required:
+              - policy_id
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/policies/{policy_id}:
+    delete:
+      operationId: remove_policy
+      summary: Remove policy
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_policy
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: policy_id
+        in: path
+        required: true
+        description: Path identifier `policy_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/tables:
+    get:
+      operationId: list_access_group_tables
+      summary: List access group tables
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_group_tables
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: add_tables_to_access_group
+      summary: Add tables to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_tables_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                table_ids: {}
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_tables_from_access_group
+      summary: Remove tables from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_tables_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: table_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/tables/{table_id}:
+    post:
+      operationId: add_table_to_access_group
+      summary: Add table to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_table_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_table_from_access_group
+      summary: Remove table from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_table_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: table_id
+        in: path
+        required: true
+        description: Path identifier `table_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/users:
+    get:
+      operationId: list_access_group_users
+      summary: List access group users
+      tags:
+      - Access Groups
+      x-client-methods:
+      - list_access_group_users
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        schema: {}
+      - name: offset
+        in: query
+        required: false
+        schema: {}
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      operationId: add_users_to_access_group
+      summary: Add users to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_users_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_ids: {}
+              additionalProperties: false
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_users_from_access_group
+      summary: Remove users from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_users_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: user_id
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /access_groups/{access_group_id}/users/{user_id}:
+    post:
+      operationId: add_user_to_access_group
+      summary: Add user to access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - add_user_to_access_group
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      operationId: remove_user_from_access_group
+      summary: Remove user from access group
+      tags:
+      - Access Groups
+      x-client-methods:
+      - remove_user_from_access_group
+      parameters:
+      - name: access_group_id
+        in: path
+        required: true
+        description: Path identifier `access_group_id`.
+        schema:
+          type: integer
+      - name: user_id
+        in: path
+        required: true
+        description: Path identifier `user_id`.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful response. The client returns the decoded JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    Forbidden:
+      description: Authenticated but not permitted for the active organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      description: Error body. The first-party client raises BadRequestException for 4xx and RuntimeError for 5xx, carrying the raw response text; Anomalo does not publish a documented error envelope schema.
+      additionalProperties: true
+  securitySchemes:
+    AnomaloToken:
+      type: apiKey
+      in: header
+      name: X-Anomalo-Token
+      description: Anomalo API secret token. The first-party client sends it as `X-Anomalo-Token` by default (`legacy_auth=True`), read from the `ANOMALO_API_SECRET_TOKEN` environment variable.
+    BearerToken:
+      type: http
+      scheme: bearer
+      description: 'Anomalo API secret token sent as `Authorization: Bearer <token>`. Selected in the first-party client with `legacy_auth=False`.'
