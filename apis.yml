@@ -35,20 +35,20 @@ specificationVersion: '0.23'
 created: '2026-07-31'
 modified: '2026-07-31'
 tags:
-  - Data Quality
-  - Data Observability
-  - Data Monitoring
-  - Anomaly Detection
-  - Data Governance
-  - Data Lineage
-  - Data Profiling
-  - Data Validation
-  - Data Engineering
-  - Machine-Learning
-  - Snowflake
-  - Databricks
-  - BigQuery
-  - Enterprise Data
+  - data-quality
+  - data-observability
+  - data-monitoring
+  - anomaly-detection
+  - data-governance
+  - data-lineage
+  - data-profiling
+  - data-validation
+  - data-engineering
+  - machine-learning
+  - snowflake
+  - databricks
+  - bigquery
+  - enterprise-data
   - MCP
   - agent-native
 tags_raw:
@@ -81,8 +81,8 @@ apis:
   tags:
   - MCP
   - agent-native
-  - Data Quality
-  - Data Observability
+  - data-quality
+  - data-observability
   tags_raw:
   - mcp
   - agent-native
@@ -121,6 +121,8 @@ apis:
   humanURL: https://www.anomalo.com/product-overview/
   baseURL: https://app.anomalo.com/api/public/v1
   tags:
+  - APIKeys
+  tags_raw:
   - API Keys
   properties:
   - type: OpenAPI
@@ -221,6 +223,8 @@ apis:
   humanURL: https://www.anomalo.com/product-overview/
   baseURL: https://app.anomalo.com/api/public/v1
   tags:
+  - Export
+  tags_raw:
   - Exports
   properties:
   - type: OpenAPI
@@ -321,6 +325,8 @@ apis:
   humanURL: https://www.anomalo.com/product-overview/
   baseURL: https://app.anomalo.com/api/public/v1
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
@@ -401,6 +407,8 @@ apis:
   humanURL: https://www.anomalo.com/product-overview/
   baseURL: https://app.anomalo.com/api/public/v1
   tags:
+  - Task
+  tags_raw:
   - Tasks
   properties:
   - type: OpenAPI
@@ -421,6 +429,8 @@ apis:
   humanURL: https://www.anomalo.com/product-overview/
   baseURL: https://app.anomalo.com/api/public/v1
   tags:
+  - User
+  tags_raw:
   - Users
   properties:
   - type: OpenAPI
