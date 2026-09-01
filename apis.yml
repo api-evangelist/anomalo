@@ -35,20 +35,20 @@ specificationVersion: '0.23'
 created: '2026-07-31'
 modified: '2026-07-31'
 tags:
-  - data-quality
-  - data-observability
-  - data-monitoring
-  - anomaly-detection
-  - data-governance
-  - data-lineage
-  - data-profiling
-  - data-validation
-  - data-engineering
-  - machine-learning
-  - snowflake
-  - databricks
-  - bigquery
-  - enterprise-data
+  - Data Quality
+  - Data Observability
+  - Data Monitoring
+  - Anomaly Detection
+  - Data Governance
+  - Data Lineage
+  - Data Profiling
+  - Data Validation
+  - Data Engineering
+  - Machine-Learning
+  - Snowflake
+  - Databricks
+  - BigQuery
+  - Enterprise Data
   - MCP
   - agent-native
 tags_raw:
@@ -81,8 +81,8 @@ apis:
   tags:
   - MCP
   - agent-native
-  - data-quality
-  - data-observability
+  - Data Quality
+  - Data Observability
   tags_raw:
   - mcp
   - agent-native
