@@ -27,6 +27,20 @@ deliveryModel:
   - repository-unlicensed
   generated: '2026-08-28'
   method: derived
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source:
+  - authentication
+  - scopes
+  - security
+  generated: '2026-09-03'
+  method: derived
 image: https://www.anomalo.com/wp-content/uploads/2024/01/logo-1.svg
 url: https://raw.githubusercontent.com/api-evangelist/anomalo/refs/heads/main/apis.yml
 x-type: company
