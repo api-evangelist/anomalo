@@ -465,6 +465,8 @@ apis:
   humanURL: https://www.anomalo.com/product-overview/
   baseURL: https://app.anomalo.com/api/public/v1
   tags:
+  - Warehouse
+  tags_raw:
   - Warehouses
   properties:
   - type: OpenAPI
