@@ -1,8 +1,8 @@
 {
   "provider": "anomalo",
   "sources": [
-    "anomalo-public-api-openapi.yml",
-    "anomalo-unstructured-openapi.yml"
+    "_ae-authored/anomalo-public-api-openapi.yml",
+    "_ae-authored/anomalo-unstructured-openapi.yml"
   ],
   "outputs": [
     "anomalo-api-keys-api-openapi.yml",
@@ -24,16 +24,33 @@
     "anomalo-documents-api-openapi.yml",
     "anomalo-issues-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/anomalo-public-api-openapi.yml",
-    "archived openapi/anomalo-unstructured-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "anomalo-public-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "anomalo-unstructured-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+18 apis, 19 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "anomalo-access-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-api-keys-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-check-runs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-checks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-document-collections-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-exports-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-issues-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-labels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-lineage-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-notification-channels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-sensitive-columns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-system-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-tables-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-tasks-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anomalo-warehouses-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

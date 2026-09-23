@@ -1,0 +1,33 @@
+# Front Door AI Index — anomalo — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: anomalo
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.anomalo.com
+  final_host: www.anomalo.com
+  ownership: own
+  owner: anomalo
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 24
+  host_score: 24
+  density: 12.59
+  words: 1906
+  tiers:
+    agentic: 12
+    core: 12
+    model: 0
+  ambiguous: 34
+  top_terms:
+    agent: 31
+    AI: 10
+    agentic: 6
+    prompts: 3
+    AI agent: 2
+    intelligence: 2
+    machine learning: 2
+    autonomous agent: 1
+    predictive: 1

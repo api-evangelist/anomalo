@@ -5,34 +5,7 @@ info:
   summary: Document collection, document issue and content-analysis endpoints for Anomalo's unstructured data monitoring.
   description: 'Anomalo''s unstructured data monitoring surface, exposed under the same `/api/public/v1/` base path as the
 
-    Anomalo Public API but scoped to an organization (`/orgs/{org_id}/...`). Covers document collections
-
-    (sets of unstructured documents sourced from a cloud object store bucket or a warehouse table column),
-
-    the content-analysis check runs executed against them, the per-document and per-collection issues
-
-    Anomalo detects, and the generated metadata breakdown (tone, sentiment, language, theme, writing level,
-
-    score).
-
-
-    DERIVATION NOTE: this description was derived mechanically by API Evangelist from `anomalo_api.py` in
-
-    Anomalo''s first-party, Apache-2.0 licensed `anomalo-gemini-extension` repository, where the
-
-    `AnomaloClient` subclass calls these endpoints via the inherited `_api_call()` helper. Every path, HTTP
-
-    method and parameter below is read from those invocations. These endpoints are not exposed by the
-
-    published `anomalo` PyPI client and back the MCP server''s experimental unstructured tools, which are
-
-    gated behind the `ANOMALO_EXPERIMENTAL_UNSTRUCTURED_TOOLS` environment variable — treat them as
-
-    experimental. Response schemas are documented from the MCP tool docstrings, which enumerate the fields
-
-    Anomalo returns; nothing has been invented. This is an unofficial, derived description and is not
-
-    endorsed by Anomalo.'
+    Anomalo Public API but scoped to an organization (`/orgs/{org_id}/...`).'
   contact:
     name: Anomalo
     url: https://www.anomalo.com/contact-us/
@@ -239,26 +212,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request. Raised by the client as BadRequestException (not retried).
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    ServerError:
-      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
       content:
         application/json:
           schema:

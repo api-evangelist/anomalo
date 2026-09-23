@@ -3,10 +3,7 @@ info:
   title: Anomalo Public Tables API
   version: v1
   summary: Data quality monitoring, table configuration and check orchestration for the Anomalo platform.
-  description: 'The Anomalo Public API (`/api/public/v1/`) drives Anomalo''s data quality monitoring platform: connect and refresh warehouses, configure which tables are monitored, create and run data quality checks, read check-run results and table data profiles, manage table/check labels, administer users, API keys and access groups, record table lineage edges, and manage notification channels.
-
-
-    DERIVATION NOTE: this description was derived mechanically by API Evangelist from the first-party, Apache-2.0 licensed `anomalo` Python client published by Anomalo on PyPI (version 0.46.0). Every path, HTTP method and parameter below is read from that client''s `_api_call()` invocations. Anomalo does not publish an OpenAPI description or public API reference of its own; its documentation is gated to customers. Response schemas are therefore left open (`type: object`) rather than invented. This is an unofficial, derived description and is not endorsed by Anomalo.'
+  description: 'The Anomalo Public API (`/api/public/v1/`) drives Anomalo''s data quality monitoring platform: connect and refresh warehouses, configure which tables are monitored, create and run data quality checks, read check-run results and table data profiles, manage table/check labels, administer users, API keys and access groups, record table lineage edges, and manage notification channels.'
   contact:
     name: Anomalo
     url: https://www.anomalo.com/contact-us/
@@ -382,7 +379,7 @@ paths:
   /tables/{table_id}/config:
     get:
       operationId: get_table_configuration
-      summary: Get the configuration for a specific table including custom_holidays.
+      summary: Get the configuration for a specific table including custom_holidays
       tags:
       - Tables
       x-client-methods:
@@ -532,26 +529,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API token.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request. Raised by the client as BadRequestException (not retried).
+    ServerError:
+      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    ServerError:
-      description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
       content:
         application/json:
           schema:
