@@ -148,12 +148,6 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   responses:
-    Forbidden:
-      description: Authenticated but not permitted for this organization or resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
     Unauthorized:
       description: Missing or invalid API token.
       content:
@@ -174,6 +168,12 @@ components:
             $ref: '#/components/schemas/Error'
     BadRequest:
       description: Bad request. Raised by the client as BadRequestException (not retried).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Authenticated but not permitted for this organization or resource.
       content:
         application/json:
           schema:
