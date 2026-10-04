@@ -406,6 +406,12 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   responses:
+    Unauthorized:
+      description: Missing or invalid API token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
     Forbidden:
       description: Authenticated but not permitted for the active organization or resource.
       content:
@@ -414,12 +420,6 @@ components:
             $ref: '#/components/schemas/Error'
     NotFound:
       description: Resource not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Missing or invalid API token.
       content:
         application/json:
           schema:
