@@ -50,7 +50,7 @@ x-type: company
 x-source: harvest:secondary-market
 specificationVersion: '0.23'
 created: '2026-07-31'
-modified: '2026-07-31'
+modified: '2026-10-06'
 tags:
   - Data Quality
   - Data Observability
@@ -486,6 +486,8 @@ apis:
   - type: Documentation
     url: https://www.anomalo.com/product-overview/
 common:
+  - url: https://www.anomalo.com/feed/
+    type: BlogRSS
   - type: Overlay
     url: overlays/anomalo-public-api-overlay.yaml
   - type: Releases
