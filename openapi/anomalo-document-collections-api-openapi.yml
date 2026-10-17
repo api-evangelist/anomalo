@@ -206,14 +206,20 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   responses:
-    Unauthorized:
-      description: Missing or invalid API token.
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     Forbidden:
       description: Authenticated but not permitted for this organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
       content:
         application/json:
           schema:
@@ -230,19 +236,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request. Raised by the client as BadRequestException (not retried).
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      description: 'Error body. The first-party client raises BadRequestException for 4xx and RuntimeError for 5xx,
-
-        carrying the raw response text; Anomalo does not publish a documented error envelope schema.'
-      additionalProperties: true
     Collection:
       type: object
       description: 'An unstructured document collection. Field list taken verbatim from the `get_unstructured_collections`
@@ -281,6 +275,12 @@ components:
         ai_model:
           type: string
           description: The AI model used for analyzing the documents in the collection.
+      additionalProperties: true
+    Error:
+      type: object
+      description: 'Error body. The first-party client raises BadRequestException for 4xx and RuntimeError for 5xx,
+
+        carrying the raw response text; Anomalo does not publish a documented error envelope schema.'
       additionalProperties: true
   securitySchemes:
     AnomaloToken:

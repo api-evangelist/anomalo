@@ -845,14 +845,20 @@ paths:
           $ref: '#/components/responses/ServerError'
 components:
   responses:
-    Unauthorized:
-      description: Missing or invalid API token.
+    BadRequest:
+      description: Bad request. Raised by the client as BadRequestException (not retried).
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
     Forbidden:
       description: Authenticated but not permitted for the active organization or resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid API token.
       content:
         application/json:
           schema:
@@ -865,12 +871,6 @@ components:
             $ref: '#/components/schemas/Error'
     ServerError:
       description: Server error. The first-party client retries these up to 5 times with exponential jitter backoff.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    BadRequest:
-      description: Bad request. Raised by the client as BadRequestException (not retried).
       content:
         application/json:
           schema:
