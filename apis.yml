@@ -303,6 +303,8 @@ apis:
   humanURL: https://www.anomalo.com/product-overview/
   baseURL: https://app.anomalo.com/api/public/v1
   tags:
+  - Data Lineage
+  tags_raw:
   - Lineage
   properties:
   - type: OpenAPI
