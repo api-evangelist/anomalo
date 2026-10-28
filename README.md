@@ -64,61 +64,135 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Anomalo is an AI-powered data quality and data observability platform. It connects to cloud data
-warehouses and lakehouses — Snowflake, Databricks, BigQuery, Redshift, S3 — profiles the tables it
-monitors, and applies unsupervised machine learning to detect anomalies without hand-authored rules,
-alongside declaratively configured validation checks. It covers structured, semi-structured and
-unstructured data, performs root-cause analysis on failures, tracks table lineage, and routes alerts to
-Slack, Microsoft Teams, Jira and ServiceNow.
+Anomalo is an AI-powered data quality and data observability platform that automatically detects, alerts on, triages and helps resolve data issues before they reach analytics, reporting or AI models. It connects directly to cloud data warehouses and lakehouses — Snowflake, Databricks, BigQuery, Redshift, Amazon S3 and others — profiles the tables it monitors, and applies unsupervised machine learning to surface anomalies without requiring engineers to hand-author rules or maintain thresholds, alongside declaratively configured validation checks. The platform covers structured, semi-structured and unstructured data, performs root-cause analysis on failed checks, tracks table lineage, and routes alerts to Slack, Microsoft Teams, Jira, ServiceNow, PagerDuty and email. Anomalo exposes a REST Public API (`/api/public/v1/`) for warehouse connection, table configuration, check authoring and execution, check-run results, labels, lineage edges, users, API keys and access-group administration, plus a first-party Python client and CLI, an Apache Airflow provider, and an official MCP server shipped as a Google Gemini CLI extension. Anomalo is deployed per-tenant, with API documentation gated to customers; the company holds SOC 2 Type 2 and ISO 27001 attestations.
 
-- Website: https://www.anomalo.com/
-- Product overview: https://www.anomalo.com/product-overview/
-- GitHub: https://github.com/anomalo-hq
+**Areas:** Data Quality · Data Observability · Data Monitoring · Anomaly Detection · Data Governance · Data Lineage · Data Profiling · Data Validation · Data Engineering · Machine Learning · Snowflake · Databricks
 
-## API surface
+## Anomalo on APIs.io
 
-Anomalo exposes a **Public REST API** at `https://{instance}/api/public/v1/`, authenticated with an API
-secret token sent as the `X-Anomalo-Token` header. Anomalo is deployed **per tenant**, so there is no
-single shared API host.
+Everything profiled for Anomalo is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/anomalo/](https://apis.io/providers/anomalo/)** — or go straight to one of the APIs or properties below.
 
-Anomalo's product and API documentation is **gated to customers**, and Anomalo publishes **no OpenAPI
-description**. The two specs in `openapi/` were derived by the API Evangelist enrichment pipeline from
-Anomalo's own Apache-2.0 licensed client code — the `anomalo` PyPI package (92 operations) and the
-`anomalo-gemini-extension` MCP adapter (8 experimental unstructured operations). They are unofficial
-and not endorsed by Anomalo. Every path, method and parameter is read mechanically from that source;
-nothing is invented.
+### APIs (19)
 
-Anomalo also publishes an **official MCP server** (Apache-2.0), shipped as a Google Gemini CLI
-extension. It is a local stdio server exposing 9 stable tools, 2 experimental tools and 4 MCP prompts —
-a deliberate 17% read-mostly projection of the REST surface. See `mcp/anomalo-tool-crosswalk.yml` for
-the tool-to-operation binding.
+- [Anomalo MCP Server](https://apis.io/apis/anomalo/anomalo-mcp-server/) — Official Anomalo MCP (Model Context Protocol) server, published by Anomalo as a Google Gemini CLI extension under the Apache-2.0 license. Runs locally over…
+- [Anomalo Access Groups API](https://apis.io/apis/anomalo/anomalo-access-groups-api/) — The Access Groups API from Anomalo — 10 operation(s) for access groups.
+- [Anomalo API Keys API](https://apis.io/apis/anomalo/anomalo-api-keys-api/) — The API Keys API from Anomalo — 2 operation(s) for api keys.
+- [Anomalo Check Runs API](https://apis.io/apis/anomalo/anomalo-check-runs-api/) — The Check Runs API from Anomalo — 2 operation(s) for check runs.
+- [Anomalo Checks API](https://apis.io/apis/anomalo/anomalo-checks-api/) — The Checks API from Anomalo — 9 operation(s) for checks.
+- [Anomalo Document Collections API](https://apis.io/apis/anomalo/anomalo-document-collections-api/) — Sets of unstructured documents Anomalo monitors and analyzes.
+- [Anomalo Documents API](https://apis.io/apis/anomalo/anomalo-documents-api/) — Individual documents within a collection, and the issues found in them.
+- [Anomalo Exports API](https://apis.io/apis/anomalo/anomalo-exports-api/) — The Exports API from Anomalo — 1 operation(s) for exports.
+- [Anomalo Issues API](https://apis.io/apis/anomalo/anomalo-issues-api/) — Data quality issues detected across an organization's unstructured content.
+- [Anomalo Labels API](https://apis.io/apis/anomalo/anomalo-labels-api/) — The Labels API from Anomalo — 5 operation(s) for labels.
+- [Anomalo Lineage API](https://apis.io/apis/anomalo/anomalo-lineage-api/) — The Lineage API from Anomalo — 3 operation(s) for lineage.
+- [Anomalo Notification Channels API](https://apis.io/apis/anomalo/anomalo-notification-channels-api/) — The Notification Channels API from Anomalo — 3 operation(s) for notification channels.
+- [Anomalo Organizations API](https://apis.io/apis/anomalo/anomalo-organizations-api/) — The Organizations API from Anomalo — 3 operation(s) for organizations.
+- [Anomalo Sensitive Columns API](https://apis.io/apis/anomalo/anomalo-sensitive-columns-api/) — The Sensitive Columns API from Anomalo — 2 operation(s) for sensitive columns.
+- [Anomalo System API](https://apis.io/apis/anomalo/anomalo-system-api/) — The System API from Anomalo — 1 operation(s) for system.
+- [Anomalo Tables API](https://apis.io/apis/anomalo/anomalo-tables-api/) — The Tables API from Anomalo — 10 operation(s) for tables.
+- [Anomalo Tasks API](https://apis.io/apis/anomalo/anomalo-tasks-api/) — The Tasks API from Anomalo — 1 operation(s) for tasks.
+- [Anomalo Users API](https://apis.io/apis/anomalo/anomalo-users-api/) — The Users API from Anomalo — 6 operation(s) for users.
+- [Anomalo Warehouses API](https://apis.io/apis/anomalo/anomalo-warehouses-api/) — The Warehouses API from Anomalo — 5 operation(s) for warehouses.
 
-## Artifacts
+### Published properties
 
-| Directory | Contents |
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Anomalo MCP Server](https://apis.io/servers/anomalo/anomalo-mcp-server/)
+
+#### Collections (2)
+
+Postman and Open Collection request collections.
+
+- [Anomalo Public API](https://apis.io/collections/anomalo/open-anomalo-public-api/)
+- [Anomalo Unstructured Data API](https://apis.io/collections/anomalo/open-anomalo-unstructured/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Anomalo Public Api Overlay](https://apis.io/overlays/anomalo/anomalo-public-api-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Anomalo Authentication](https://apis.io/security/anomalo/anomalo-authentication/)
+- [Anomalo Domain Security](https://apis.io/security/anomalo/anomalo-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Anomalo Scopes](https://apis.io/scopes/anomalo/anomalo-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.anomalo.com/)
+- [Documentation](https://www.anomalo.com/product-overview/)
+- [Sign up](https://www.anomalo.com/request-a-demo/)
+- [Support](https://www.anomalo.com/request-support/)
+- [Blog](https://www.anomalo.com/blog/)
+- [Compliance](https://www.anomalo.com/legal/)
+- [Terms of service](https://www.anomalo.com/legal/subscription/)
+- [Privacy policy](https://www.anomalo.com/legal/privacy/)
+- [GitHub](https://github.com/anomalo-hq)
+
+## API Evangelist rating
+
+**Kin Score 35.6** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
 |---|---|
-| `openapi/` | Derived OpenAPI 3.1 for the Public API (92 ops) and the experimental Unstructured API (8 ops) |
-| `overlays/` | API Evangelist analysis layered on the Public API spec |
-| `mcp/` | Official MCP server manifest and the MCP↔REST tool crosswalk |
-| `skills/` | Four packaged Agent Skills, grounded in verified operationIds |
-| `packages/` | First-party Python client and Airflow provider |
-| `cli/` | The `anomalo` CLI command surface, including configuration-as-code |
-| `authentication/`, `scopes/` | API token auth; OIDC covers web sign-on only, not the API |
-| `conventions/` | Tenancy, pagination, retries, versioning — read before integrating |
-| `errors/` | Transport error contract and check-outcome fields |
-| `data-model/` | 17-entity relationship graph |
-| `lifecycle/`, `changelog/` | Versioning and the client release stream |
-| `conformance/`, `security/`, `well-known/` | Standards conformance, domain security probes, `/.well-known/` survey |
+| Discoverability | 78.6 |
+| Contract quality | 15.4 |
+| Contract governance | 4.5 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 44.6 |
+| Access clarity | 42.1 |
 
-## Notable findings
+**Agent readiness 21.0** — agent-aware
 
-- **No idempotency.** No idempotency key, deduplication or conditional requests anywhere in the API.
-- **Sticky tenancy.** The active organization is server-side state on the API key, not a request
-  parameter — concurrent clients sharing a key interfere with each other.
-- **No status page, no deprecation policy, no SLA, no public changelog, no security.txt** and no
-  vulnerability disclosure program.
-- **SOC 2 Type 2 and ISO 27001** per badges on https://www.anomalo.com/legal/.
-- Domain security: TLS 1.3 and HSTS on both hosts, DMARC at `p=quarantine`, but **no SPF, no DNSSEC and
-  no CAA**.
-- `docs.anomalo.com` redirects to the WordPress marketing site, which returns HTTP 200 with rendered
-  HTML for `/llms.txt` and every `/.well-known/*` path — a false-positive trap for discovery tooling.
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 36.4** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/anomalo/](https://apis.io/providers/anomalo/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Anomalo: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/anomalo/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
